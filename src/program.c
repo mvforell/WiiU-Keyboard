@@ -1,5 +1,8 @@
 #include "program.h"
 
+#define WAIT_KEY 0x19FFFFF
+#define WAIT_MENU 0x1FFFFFF
+
 void _entryPoint()
 {
 	/****************************>           Get Handles           <****************************/
@@ -28,32 +31,33 @@ void _entryPoint()
 	flags.QWERTY=0;
 	flags.change_theme=0;
 	flags.textLength=1;
-	// flags.keyAPressed=0;
-	// flags.keyBPressed=0;
-	// flags.keyCPressed=0;
-	// flags.keyDPressed=0;
-	// flags.keyEPressed=0;
-	// flags.keyFPressed=0;
-	// flags.keyGPressed=0;
-	// flags.keyHPressed=0;
-	// flags.keyIPressed=0;
-	// flags.keyJPressed=0;
-	// flags.keyKPressed=0;
-	// flags.keyLPressed=0;
-	// flags.keyMPressed=0;
-	// flags.keyNPressed=0;
-	// flags.keyOPressed=0;
-	// flags.keyPPressed=0;
-	// flags.keyQPressed=0;
-	// flags.keyRPressed=0;
-	// flags.keySPressed=0;
-	// flags.keyTPressed=0;
-	// flags.keyUPressed=0;
-	// flags.keyVPressed=0;
-	// flags.keyWPressed=0;
-	// flags.keyXPressed=0;
-	// flags.keyYPressed=0;
-	// flags.keyZPressed=0;
+	flags.keyAPressed=0;
+	flags.keyBPressed=0;
+	flags.keyCPressed=0;
+	flags.keyDPressed=0;
+	flags.keyEPressed=0;
+	flags.keyFPressed=0;
+	flags.keyGPressed=0;
+	flags.keyHPressed=0;
+	flags.keyIPressed=0;
+	flags.keyJPressed=0;
+	flags.keyKPressed=0;
+	flags.keyLPressed=0;
+	flags.keyMPressed=0;
+	flags.keyNPressed=0;
+	flags.keyOPressed=0;
+	flags.keyPPressed=0;
+	flags.keyQPressed=0;
+	flags.keyRPressed=0;
+	flags.keySPressed=0;
+	flags.keyTPressed=0;
+	flags.keyUPressed=0;
+	flags.keyVPressed=0;
+	flags.keyWPressed=0;
+	flags.keyXPressed=0;
+	flags.keyYPressed=0;
+	flags.keyZPressed=0;
+	flags.keyBackspacePressed=0;
 	// flags.y=0;
 	// flags.x=0;
 	// flags.a=0;
@@ -112,76 +116,112 @@ void _entryPoint()
 					flags.QWERTY = 1;
 				else
 					flags.QWERTY = 0;
-				int wait = 0x3FFFFFF;
+				int wait = WAIT_MENU;
 				while (--wait) {}
 			}
 			if (vpad_data.tpdata.x > 3000 && vpad_data.tpdata.x < 3700 && vpad_data.tpdata.y < 3250 && vpad_data.tpdata.y > 3100) {
 				flags.change_theme = 1;
-				int wait = 0x3FFFFFF;
+				int wait = WAIT_MENU;
 				while (--wait) {}
 			}
 			if (flags.change_theme && vpad_data.tpdata.x > 350 && vpad_data.tpdata.x < 700 && vpad_data.tpdata.y < 3250 && vpad_data.tpdata.y > 3100) {
 				__os_snprintf(flags.theme, 32, "Classic");
 				flags.change_theme = 0;
 				flags.menu = 0;
-				int wait = 0x3FFFFFF;
+				int wait = WAIT_MENU;
 				while (--wait) {}
 			}
 			if (vpad_data.tpdata.x > 550 && vpad_data.tpdata.x < 650 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'A';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyAPressed=1;
+				flags.keyAPressed=1;
 			}
 			if (vpad_data.tpdata.x > 700 && vpad_data.tpdata.x < 770 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'B';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyBPressed=1;
+				flags.keyBPressed=1;
 			}
 			if (vpad_data.tpdata.x > 820 && vpad_data.tpdata.x < 900 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'C';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyCPressed=1;
+				flags.keyCPressed=1;
 			}
 			if (vpad_data.tpdata.x > 950 && vpad_data.tpdata.x < 1040 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'D';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyDPressed=1;
+				flags.keyDPressed=1;
 			}
 			if (vpad_data.tpdata.x > 1100 && vpad_data.tpdata.x < 1180 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'E';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyEPressed=1;
+				flags.keyEPressed=1;
 			}
 			if (vpad_data.tpdata.x > 1230 && vpad_data.tpdata.x < 1330 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'F';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyFPressed=1;
+				flags.keyFPressed=1;
+			}
+			if (vpad_data.tpdata.x > 1500 && vpad_data.tpdata.x < 1580 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'H';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyHPressed=1;
+			}
+			if (vpad_data.tpdata.x > 1640 && vpad_data.tpdata.x < 1670 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'I';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyIPressed=1;
+			}
+			if (vpad_data.tpdata.x > 2050 && vpad_data.tpdata.x < 2140 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'L';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyLPressed=1;
+			}
+			if (vpad_data.tpdata.x > 2460 && vpad_data.tpdata.x < 2550 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'O';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyOPressed=1;
 			}
 			if (vpad_data.tpdata.x > 2600 && vpad_data.tpdata.x < 2700 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'P';
 				++flags.textLength;
-				int wait = 0x1CFFFFF;
+				int wait = WAIT_KEY;
 				while (--wait) {}
-				// flags.keyPPressed=1;
+				flags.keyPPressed=1;
 			}
-			if (vpad_data.tpdata.x > 3530 && vpad_data.tpdata.x < 3650 && vpad_data.tpdata.y < 2150 && vpad_data.tpdata.y > 2000) {
+			if (vpad_data.tpdata.x > 2730 && vpad_data.tpdata.x < 2830 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'Q';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyQPressed=1;
+			}
+			if (vpad_data.tpdata.x > 3510 && vpad_data.tpdata.x < 3660 && vpad_data.tpdata.y < 2150 && vpad_data.tpdata.y > 2000) {
 				if (flags.textLength > 1) {
 					--flags.textLength;
 					flags.text[flags.textLength - 1] = ' ';
-					int wait = 0x1CFFFFF;
+					int wait = WAIT_KEY;
 					while (--wait) {}
+					flags.keyBackspacePressed=1;
 				}
 			}
 		}
@@ -327,59 +367,59 @@ void render(struct renderFlags *flags)
 			x = 100;
 			for (i = 0; i < 26; ++i) {
 				if (c != 'N') {
-					// if (c == 'A' && flags->keyAPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'B' && flags->keyBPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'C' && flags->keyCPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'D' && flags->keyDPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'E' && flags->keyEPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'F' && flags->keyFPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'G' && flags->keyGPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'H' && flags->keyHPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'I' && flags->keyIPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'J' && flags->keyJPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'K' && flags->keyKPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'L' && flags->keyLPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'M' && flags->keyMPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'N' && flags->keyNPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'O' && flags->keyOPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'P' && flags->keyPPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'Q' && flags->keyQPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'R' && flags->keyRPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'S' && flags->keySPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'T' && flags->keyTPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'U' && flags->keyUPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'V' && flags->keyVPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'W' && flags->keyWPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'X' && flags->keyXPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'Y' && flags->keyYPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// if (c == 'Z' && flags->keyZPressed)
-					// 	drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					// else
+					if (c == 'A' && flags->keyAPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'B' && flags->keyBPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'C' && flags->keyCPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'D' && flags->keyDPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'E' && flags->keyEPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'F' && flags->keyFPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'G' && flags->keyGPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'H' && flags->keyHPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'I' && flags->keyIPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'J' && flags->keyJPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'K' && flags->keyKPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'L' && flags->keyLPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'M' && flags->keyMPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'N' && flags->keyNPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'O' && flags->keyOPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'P' && flags->keyPPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'Q' && flags->keyQPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'R' && flags->keyRPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'S' && flags->keySPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'T' && flags->keyTPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'U' && flags->keyUPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'V' && flags->keyVPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'W' && flags->keyWPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'X' && flags->keyXPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'Y' && flags->keyYPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else if (c == 'Z' && flags->keyZPressed)
+						drawChar(c, x, 255, 2, 255, 255, 0, 0);
+					else
 						drawChar(c, x, 255, 2, 255, 255, 255, 0);
 				}
 				c++;
@@ -390,12 +430,18 @@ void render(struct renderFlags *flags)
 			y = 230;
 			for (i = 0; i < 10; ++i)
 			{
-				drawLine(x, y - minusy, x, y + plusy, 255, 255, 255, 0);
+				if (flags->keyBackspacePressed)
+					drawLine(x, y - minusy, x, y + plusy, 255, 255, 0, 0);
+				else
+					drawLine(x, y - minusy, x, y + plusy, 255, 255, 255, 0);
 				++x;
 				++plusy;
 				++minusy;
 			}
-			drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 255, 0);
+			if (flags->keyBackspacePressed)
+				drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 0, 0);
+			else
+				drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 255, 0);
 		}
 
 		if (!flags->change_theme && !flags->menu) {
@@ -423,32 +469,33 @@ void render(struct renderFlags *flags)
 	// flags->start=1;
 	// flags->pow=1;
 	flags->touch=0;
-	// flags->keyAPressed=0;
-	// flags->keyBPressed=0;
-	// flags->keyCPressed=0;
-	// flags->keyDPressed=0;
-	// flags->keyEPressed=0;
-	// flags->keyFPressed=0;
-	// flags->keyGPressed=0;
-	// flags->keyHPressed=0;
-	// flags->keyIPressed=0;
-	// flags->keyJPressed=0;
-	// flags->keyKPressed=0;
-	// flags->keyLPressed=0;
-	// flags->keyMPressed=0;
-	// flags->keyNPressed=0;
-	// flags->keyOPressed=0;
-	// flags->keyPPressed=0;
-	// flags->keyQPressed=0;
-	// flags->keyRPressed=0;
-	// flags->keySPressed=0;
-	// flags->keyTPressed=0;
-	// flags->keyUPressed=0;
-	// flags->keyVPressed=0;
-	// flags->keyWPressed=0;
-	// flags->keyXPressed=0;
-	// flags->keyYPressed=0;
-	// flags->keyZPressed=0;
+	flags->keyAPressed=0;
+	flags->keyBPressed=0;
+	flags->keyCPressed=0;
+	flags->keyDPressed=0;
+	flags->keyEPressed=0;
+	flags->keyFPressed=0;
+	flags->keyGPressed=0;
+	flags->keyHPressed=0;
+	flags->keyIPressed=0;
+	flags->keyJPressed=0;
+	flags->keyKPressed=0;
+	flags->keyLPressed=0;
+	flags->keyMPressed=0;
+	flags->keyNPressed=0;
+	flags->keyOPressed=0;
+	flags->keyPPressed=0;
+	flags->keyQPressed=0;
+	flags->keyRPressed=0;
+	flags->keySPressed=0;
+	flags->keyTPressed=0;
+	flags->keyUPressed=0;
+	flags->keyVPressed=0;
+	flags->keyWPressed=0;
+	flags->keyXPressed=0;
+	flags->keyYPressed=0;
+	flags->keyZPressed=0;
+	flags->keyBackspacePressed=0;
 	// flags->a=0;
 	flags->b=0;
 	// flags->x=0;
@@ -611,7 +658,7 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 2 * scale, y + 8 * scale, x + 8 * scale, y + 9 * scale, r, g, b, a);
 	}
 
-	if (character == 'O') {
+	if (character == 'Q') {
 		drawFillRect(x + 1 * scale, y, x + 8 * scale, y + 2 * scale, r, g, b, a);
 
 		drawFillRect(x + 7 * scale, y + 2 * scale, x + 9 * scale, y + 16 * scale, r, g, b, a);
