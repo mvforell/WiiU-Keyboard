@@ -398,20 +398,22 @@ void render(struct renderFlags *flags)
 			drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 255, 0);
 		}
 
-		drawString(0, 3, "Your text:");
-		if (flags->text[0] == ' ')
-			drawString(0, 5, "<no input yet>");
-		else
-			drawString(0, 5, flags->text);
+		if (!flags->change_theme && !flags->menu) {
+			drawString(0, 3, "Your text:");
+			if (flags->text[0] == ' ')
+				drawString(0, 5, "<no input>");
+			else
+				drawString(0, 5, flags->text);
 
-		drawString(25, 16, flags->touching);
+			drawString(25, 16, flags->touching);
+		}
 
 		fillTV(64, 64, 64, 0);
 
 		drawStringTV(45, 0, "Keyboard");
 		drawStringTV(0, 3, "Your text:");
 		if (flags->text[0] == ' ')
-			drawStringTV(0, 5, "<no input yet>");
+			drawStringTV(0, 5, "<no input>");
 		else
 			drawStringTV(0, 5, flags->text);
 
