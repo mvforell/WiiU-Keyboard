@@ -1,6 +1,6 @@
 #include "loader.h"
 
-void _start()
+void _main()
 {
 	/****************************>            Fix Stack            <****************************/
 	//Load a good stack
