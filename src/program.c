@@ -1,6 +1,6 @@
 #include "program.h"
 
-#define WAIT_KEY 0x0A00000
+#define WAIT_KEY 0x0880000
 #define WAIT_MENU 0x1900000
 
 void _entryPoint()
@@ -111,8 +111,6 @@ void _entryPoint()
 					flags.plusTouched=1;
 			}
 			if (vpad_data.tpdata.x > 140 && vpad_data.tpdata.x < 350 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 230) {
-				int wait = WAIT_MENU;
-				while (--wait) {}
 				flags.HomeTouched=1;
 			}
 			if (vpad_data.tpdata.x > 320 && vpad_data.tpdata.x < 410 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
@@ -199,14 +197,14 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyLPressed=1;
 			}
-			if (vpad_data.tpdata.x > 1675 && vpad_data.tpdata.x < 1780 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 1675 && vpad_data.tpdata.x < 1775 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'M';
 				++flags.textLength;
 				int wait = WAIT_KEY;
 				while (--wait) {}
 				flags.keyMPressed=1;
 			}
-			if (vpad_data.tpdata.x > 1800 && vpad_data.tpdata.x < 1900 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 1790 && vpad_data.tpdata.x < 1900 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'N';
 				++flags.textLength;
 				int wait = WAIT_KEY;
@@ -268,6 +266,13 @@ void _entryPoint()
 				int wait = WAIT_KEY;
 				while (--wait) {}
 				flags.keyVPressed=1;
+			}
+			if (vpad_data.tpdata.x > 2825 && vpad_data.tpdata.x < 2930 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'W';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyWPressed=1;
 			}
 			if (vpad_data.tpdata.x > 3050 && vpad_data.tpdata.x < 3140 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'Y';
@@ -539,7 +544,7 @@ void render(struct renderFlags *flags)
 	flags->HomeTouched=0;
 }
 
-void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   23/26 = ~88%   */
+void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   25/26 = ~96%   */
 {
 	int x = xpos, y = ypos, i;
 	float plusx = 3.5;
@@ -683,13 +688,16 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 	}
 
 	if (character == 'N') {
-		x -= 1;
-		drawFillRect(x, y, x + 1.5 * scale, y + 18 * scale, r, g, b, a);
+		x -= 2;
+		if (scale == 1)
+			drawFillRect(x, y, x + 1.5 * scale, y + 18 * scale, r, g, b, a);
+		else
+			drawFillRect(x + 0.5 * scale, y, x + 2 * scale, y + 18 * scale, r, g, b, a);
 
 		for (i = 0; i < 5; ++i) {
 			drawFillRect(x + 2 * scale + 1.5 * i * scale, y + 0.5 * scale + 3.5 * i * scale, x + 3.5 * scale + 1.5 * i * scale, y + 3.5 * scale + 3.5 * i * scale, r, g, b, a);
 		}
-		drawFillRect(x, y, x + 3.5 * scale, y, r, g, b, a);
+		drawFillRect(x + 1, y, x + 3.5 * scale, y, r, g, b, a);
 		drawFillRect(x + 8 * scale, y + 18 * scale, x + 11 * scale, y + 18 * scale, r, g, b, a);
 
 		if (scale == 1)
@@ -787,7 +795,16 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 8 * scale, y, x + 10 * scale, y + 4 * scale, r, g, b, a);
 	}
 
-	//W
+	if (character == 'W') {
+		drawFillRect(x, y, x + 2 * scale, y + 16 * scale, r, g, b, a);
+		drawFillRect(x + 1.5 * scale, y + 15.5 * scale, x + 9.5 * scale, y + 17 * scale, r, g, b, a);
+
+		drawFillRect(x + 5 * scale, y + 8.5 * scale, x + 6 * scale, y + 15.5 * scale, r, g, b, a);
+
+		drawFillRect(x + 3 * scale, y + 17 * scale, x + 4 * scale, y + 18 * scale, r, g, b, a);
+		drawFillRect(x + 7 * scale, y + 17 * scale, x + 8 * scale, y + 18 * scale, r, g, b, a);
+		drawFillRect(x + 9 * scale, y, x + 11 * scale, y + 16 * scale, r, g, b, a);
+	}
 
 	//X
 
