@@ -157,6 +157,13 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyFPressed=1;
 			}
+			if (vpad_data.tpdata.x > 1000 && vpad_data.tpdata.x < 1080 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'G';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyGPressed=1;
+			}
 			if (vpad_data.tpdata.x > 1120 && vpad_data.tpdata.x < 1200 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'H';
 				++flags.textLength;
@@ -171,7 +178,7 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyIPressed=1;
 			}
-			if (vpad_data.tpdata.x > 1340 && vpad_data.tpdata.x < 1420 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 1330 && vpad_data.tpdata.x < 1415 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'J';
 				++flags.textLength;
 				int wait = WAIT_KEY;
@@ -434,9 +441,11 @@ void render(struct renderFlags *flags)
 			if (flags->keySpacePressed) {
 				drawRect(735, 265, 800, 285, 255, 255, 0, 0);
 				drawRect(736, 264, 799, 286, 255, 255, 0, 0);
+				drawRect(737, 263, 798, 287, 255, 255, 0, 0);
 			} else {
 				drawRect(735, 265, 800, 285, 255, 255, 255, 0);
 				drawRect(736, 264, 799, 286, 255, 255, 255, 0);
+				drawRect(737, 263, 798, 287, 255, 255, 255, 0);
 			}
 		}
 
@@ -526,7 +535,7 @@ void render(struct renderFlags *flags)
 	flags->HomeTouched=0;
 }
 
-void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   21/26 = ~81%   */
+void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   23/26 = ~88%   */
 {
 	int x = xpos, y = ypos, i;
 	float plusx = 3.5;
@@ -598,13 +607,23 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 	}
 
 	if (character == 'F') {
+		x += 1;
 		drawFillRect(x, y, x + 8 * scale, y + 1.5 * scale, r, g, b, a);
 
 		drawFillRect(x, y + 1 * scale, x + 2 * scale, y + 18 * scale, r, g, b, a);
 		drawFillRect(x + 2 * scale, y + 8.5 * scale, x + 7 * scale, y + 9.5 * scale, r, g, b, a);
 	}
 
-	//G
+	if (character == 'G') {
+		drawFillRect(x + 1 * scale, y, x + 7 * scale, y + 1 * scale, r, g, b, a);
+		drawFillRect(x, y + 1.5 * scale, x + 2 * scale, y + 16.5 * scale, r, g, b, a);
+		drawFillRect(x + 6.5 * scale, y + 1.5 * scale, x + 8 * scale, y + 3 * scale, r, g, b, a);
+
+		drawFillRect(x + 6.5 * scale, y + 9 * scale, x + 8 * scale, y + 17.5 * scale, r, g, b, a);
+		drawFillRect(x + 5.5 * scale, y + 9 * scale, x + 8 * scale, y + 10 * scale, r, g, b, a);
+		drawFillRect(x + 7.5 * scale, y + 17 * scale, x + 8 * scale, y + 18 * scale, r, g, b, a);
+		drawFillRect(x + 1 * scale, y + 17 * scale, x + 6.5 * scale, y + 18 * scale, r, g, b, a);
+	}
 
 	if (character == 'H') {
 		drawFillRect(x, y, x + 2 * scale, y + 18 * scale, r, g, b, a);
@@ -620,7 +639,7 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 	}
 
 	if (character == 'J') {
-		x -= 2;
+		x -= 3;
 		drawFillRect(x + 7 * scale, y, x + 9 * scale, y + 16 * scale, r, g, b, a);
 		drawFillRect(x + 1 * scale, y + 16 * scale, x + 8 * scale, y + 18 * scale, r, g, b, a);
 		drawFillRect(x, y + 14 * scale, x + 2 * scale, y + 16 * scale, r, g, b, a);
