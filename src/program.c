@@ -110,7 +110,7 @@ void _entryPoint()
 				else
 					flags.plusTouched=1;
 			}
-			if (vpad_data.tpdata.x > 140 && vpad_data.tpdata.x < 350 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 230) {
+			if (vpad_data.tpdata.x > 110 && vpad_data.tpdata.x < 320 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 215) {
 				flags.HomeTouched=1;
 			}
 			if (vpad_data.tpdata.x > 320 && vpad_data.tpdata.x < 410 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
@@ -274,7 +274,14 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyWPressed=1;
 			}
-			if (vpad_data.tpdata.x > 3050 && vpad_data.tpdata.x < 3140 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 2940 && vpad_data.tpdata.x < 3040 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'X';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyXPressed=1;
+			}
+			if (vpad_data.tpdata.x > 3060 && vpad_data.tpdata.x < 3145 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'Y';
 				++flags.textLength;
 				int wait = WAIT_KEY;
@@ -467,37 +474,37 @@ void render(struct renderFlags *flags)
 
 		if (!flags->menu) {
 			if (flags->plus) {
-				drawFillCircle(820, 450, 16, 255, 255, 0, 0);
-				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-				drawFillRect(818, 440, 822, 460, 255, 255, 0, 0);
-				drawFillRect(810, 452, 830, 448, 255, 255, 0, 0);
+				drawFillCircle(822, 450, 16, 255, 255, 0, 0);
+				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
+				drawFillRect(820, 440, 824, 460, 255, 255, 0, 0);
+				drawFillRect(812, 452, 832, 448, 255, 255, 0, 0);
 			} else {
-				drawFillCircle(820, 450, 16, 255, 255, 255, 0);
-				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-				drawFillRect(818, 440, 822, 460, 255, 255, 255, 0);
-				drawFillRect(810, 452, 830, 448, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
+				drawFillRect(820, 440, 824, 460, 255, 255, 255, 0);
+				drawFillRect(812, 452, 832, 448, 255, 255, 255, 0);
 			}
 		} else {
 			if (flags->b) {
-				drawFillCircle(820, 450, 16, 255, 255, 0, 0);
-				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-				drawChar('B', 816, 441, 1, 255, 255, 0, 0);
+				drawFillCircle(822, 450, 16, 255, 255, 0, 0);
+				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
+				drawChar('B', 818, 441, 1, 255, 255, 0, 0);
 			} else {
-				drawFillCircle(820, 450, 16, 255, 255, 255, 0);
-				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-				drawChar('B', 816, 441, 1, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
+				drawChar('B', 818, 441, 1, 255, 255, 255, 0);
 			}
 		}
-		drawFillCircle(30, 452, 22, 255, 255, 255, 0);
-		drawFillCircle(30, 452, 19, 64, 64, 64, 0);
+		drawFillCircle(27, 452, 22, 255, 255, 255, 0);
+		drawFillCircle(27, 452, 19, 64, 64, 64, 0);
 
-		int m, x = 15, y = 450;
+		int m, x = 12, y = 450;
 		for (m = 0; m < 16; ++m) {
 			drawLine(x + m, y, x + 30 - m, y + m, 255, 255, 255, 0);
 			--y;
 		}
-		drawFillRect(20, 450, 40, 465, 255, 255, 255, 0);
-		drawFillRect(26, 453, 34, 458, 64, 64, 64, 0);
+		drawFillRect(17, 450, 37, 465, 255, 255, 255, 0);
+		drawFillRect(23, 453, 31, 458, 64, 64, 64, 0);
 
 		fillTV(64, 64, 64, 0);
 
@@ -544,7 +551,7 @@ void render(struct renderFlags *flags)
 	flags->HomeTouched=0;
 }
 
-void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   25/26 = ~96%   */
+void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a)
 {
 	int x = xpos, y = ypos, i;
 	float plusx = 3.5;
@@ -806,9 +813,31 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 9 * scale, y, x + 11 * scale, y + 16 * scale, r, g, b, a);
 	}
 
-	//X
+	if (character == 'X') {
+		x += 1.5;
+		drawFillRect(x, y, x + 2 * scale, y + 2 * scale, r, g, b, a);
+		drawFillRect(x + 8 * scale, y, x + 10 * scale, y + 2 * scale, r, g, b, a);
+
+		drawFillRect(x + 1 * scale, y + 2.5 * scale, x + 3 * scale, y + 4.5 * scale, r, g, b, a);
+		drawFillRect(x + 7 * scale, y + 2.5 * scale, x + 9 * scale, y + 4.5 * scale, r, g, b, a);
+
+		drawFillRect(x + 2 * scale, y + 5 * scale, x + 4 * scale, y + 7.5 * scale, r, g, b, a);
+		drawFillRect(x + 6 * scale, y + 5 * scale, x + 8 * scale, y + 7.5 * scale, r, g, b, a);
+
+		drawFillRect(x + 3 * scale, y + 8 * scale, x + 7 * scale, y + 10 * scale, r, g, b, a);
+
+		drawFillRect(x + 2 * scale, y + 10.5 * scale, x + 4 * scale, y + 13 * scale, r, g, b, a);
+		drawFillRect(x + 6 * scale, y + 10.5 * scale, x + 8 * scale, y + 13 * scale, r, g, b, a);
+
+		drawFillRect(x + 1 * scale, y + 13.5 * scale, x + 3 * scale, y + 15.5 * scale, r, g, b, a);
+		drawFillRect(x + 7 * scale, y + 13.5 * scale, x + 9 * scale, y + 15.5 * scale, r, g, b, a);
+
+		drawFillRect(x, y + 16 * scale, x + 2 * scale, y + 18 * scale, r, g, b, a);
+		drawFillRect(x + 8 * scale, y + 16 * scale, x + 10 * scale, y + 18 * scale, r, g, b, a);
+	}
 
 	if (character == 'Y') {
+		x += 2;
 		drawFillRect(x, y, x + 2 * scale, y + 4 * scale, r, g, b, a);
 		drawFillRect(x + 1 * scale, y + 4 * scale, x + 3 * scale, y + 7 * scale, r, g, b, a);
 
