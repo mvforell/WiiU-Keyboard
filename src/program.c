@@ -1,7 +1,7 @@
 #include "program.h"
 
-#define WAIT_KEY 0x100AFFF
-#define WAIT_MENU 0x100FFFF
+#define WAIT_KEY 0x0A00000
+#define WAIT_MENU 0x1000000
 
 void _entryPoint()
 {
@@ -24,8 +24,6 @@ void _entryPoint()
 	OSDynLoad_FindExport(coreinit_handle, 0, "_Exit", &_Exit);
 	/****************************>             Globals             <****************************/
 	struct renderFlags flags;
-	// flags.start=1;
-	// flags.pow=1;
 	flags.touch=0;
 	flags.menu=0;
 	flags.QWERTY=0;
@@ -58,20 +56,8 @@ void _entryPoint()
 	flags.keyYPressed=0;
 	flags.keyZPressed=0;
 	flags.keyBackspacePressed=0;
-	// flags.y=0;
-	// flags.x=0;
-	// flags.a=0;
 	flags.b=0;
-	// flags.l=0;
-	// flags.r=0;
-	// flags.zl=0;
-	// flags.zr=0;
-	// flags.du=0;
-	// flags.dd=0;
-	// flags.dl=0;
-	// flags.dr=0;
 	flags.plus=0;
-	// flags.minus=0;
 	
 	VPADData vpad_data;
 
@@ -238,6 +224,13 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyYPressed=1;
 			}
+			if (vpad_data.tpdata.x > 3160 && vpad_data.tpdata.x < 3250 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'Z';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyZPressed=1;
+			}
 			if (vpad_data.tpdata.x > 3510 && vpad_data.tpdata.x < 3650 && vpad_data.tpdata.y < 2090 && vpad_data.tpdata.y > 1950) {
 				if (flags.textLength > 1) {
 					--flags.textLength;
@@ -248,54 +241,12 @@ void _entryPoint()
 				}
 			}
 		}
-
-		// //button A
-		// if (vpad_data.btn_hold & BUTTON_A)
-		// 	flags.a=1;
-	
-		//button B
 		if (vpad_data.btn_hold & BUTTON_B)
 			flags.b=1;
 
-		// //button X
-		// if (vpad_data.btn_hold & BUTTON_X)
-		// 	flags.x=1;
-
-		// //button Y
-		// if (vpad_data.btn_hold & BUTTON_Y)
-		// 	flags.y=1;
-
-		// if (vpad_data.btn_hold & BUTTON_L)
-		// 	flags.l=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_R)
-		// 	flags.r=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_ZL)
-		// 	flags.zl=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_ZR)
-		// 	flags.zr=1;
-		
-		// if (vpad_data.btn_hold & BUTTON_UP)
-		// 	flags.du=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_DOWN)
-		// 	flags.dd=1;
-		
-		// if (vpad_data.btn_hold & BUTTON_LEFT)
-		// 	flags.dl=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_RIGHT)
-		// 	flags.dr=1;
-			
 		if (vpad_data.btn_hold & BUTTON_PLUS)
 			flags.plus=1;
-			
-		// if (vpad_data.btn_hold & BUTTON_MINUS)
-		// 	flags.minus=1;
 
-		//end
 		if(vpad_data.btn_hold & BUTTON_HOME)
 			break;
 
@@ -318,7 +269,7 @@ void render(struct renderFlags *flags)
 	int i=0;
 	for(i;i<2;i++)
 	{
-		fillScreen(64, 64, 64, 0); //This part (until fillTV()) will only be shown on the Gamepad
+		fillScreen(64, 64, 64, 0); //The part until fillTV() will only be shown on the Gamepad
 
 		if (flags->menu) {
 			drawString(0, 4, "Current theme: ");
@@ -337,44 +288,13 @@ void render(struct renderFlags *flags)
 				drawString(0, 2, "Classic");
 			}
 		}
-		// if(flags->start)
-		// 	drawString(0,0,flags->startUp);
-		// if(flags->a)
-		// 	drawString(0,10,flags->aPressed);
 		if(flags->b) {
 			flags->menu = 0;
 			flags->change_theme = 0;
 		}
-		// if(flags->x)
-		// 	drawString(0,10,flags->xPressed);
-		// if(flags->y)
-		// 	drawString(0,10,flags->yPressed);
-		// if(flags->l)
-		// 	drawString(0,10,flags->lPressed);
-		// if(flags->r)
-		// 	drawString(0,10,flags->rPressed);
-		// if(flags->zl)
-		// 	drawString(0,10,flags->zlPressed);
-		// if(flags->zr)
-		// 	drawString(0,10,flags->zrPressed);
-		// if(flags->plus)
-		// 	drawString(0,10,flags->plusPressed);
 		if(flags->plus) {
 				flags->menu = 1;
-		}			
-		// if(flags->pow)
-		// 	drawString(0,13,flags->power);
-		// if(flags->touch) {
-		// 	drawString(25, 16, flags->touching);
-		// }
-		// if(flags->du)
-		// 	drawString(0,10,flags->dUp);
-		// if(flags->dd)
-		// 	drawString(0,10,flags->dDown);
-		// if(flags->dl)
-		// 	drawString(0,10,flags->dLeft);
-		// if(flags->dr)
-		// 	drawString(0,10,flags->dRight);
+		}
 
 		if (!flags->menu) {
 			drawString(27, 0, "Keyboard");
@@ -495,7 +415,7 @@ void render(struct renderFlags *flags)
 			--y;
 		}
 		drawFillRect(20, 450, 40, 465, 255, 255, 255, 0);
-		drawFillRect(26, 453, 34, 458, 64, 64, 64, 0); //y: 430 - 460, x: 12 - 48 -> (30, 445), r = 18
+		drawFillRect(26, 453, 34, 458, 64, 64, 64, 0);
 
 		fillTV(64, 64, 64, 0);
 
@@ -506,8 +426,6 @@ void render(struct renderFlags *flags)
 		flipBuffers();
 	}
 
-	// flags->start=1;
-	// flags->pow=1;
 	flags->touch=0;
 	flags->keyAPressed=0;
 	flags->keyBPressed=0;
@@ -536,38 +454,11 @@ void render(struct renderFlags *flags)
 	flags->keyYPressed=0;
 	flags->keyZPressed=0;
 	flags->keyBackspacePressed=0;
-	// flags->a=0;
 	flags->b=0;
-	// flags->x=0;
-	// flags->y=0;
-	// flags->l=0;
-	// flags->r=0;
-	// flags->zl=0;
-	// flags->zr=0;
 	flags->plus=0;
-	// flags->minus=0;
-	// flags->du=0;
-	// flags->dd=0;
-	// flags->dl=0;
-	// flags->dr=0;
 }
 
-// void wait(unsigned int ticks)
-// {
-//     unsigned int coreinit_handle;
-//     OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-
-//     unsigned int(*OSGetTick)();
-//     OSDynLoad_FindExport(coreinit_handle, 0, "OSGetTick", &OSGetTick);
-
-//     unsigned int start_ticks = OSGetTick();
-//     unsigned int current_ticks = OSGetTick();
-
-//     while (current_ticks < start_ticks + ticks)
-//         current_ticks = OSGetTick();
-// }
-
-void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   18/26 = ~69%   */
+void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   20/26 = ~77%   */
 {
 	int x = xpos, y = ypos;
 
@@ -663,7 +554,17 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x, y + 14 * scale, x + 2 * scale, y + 16 * scale, r, g, b, a);
 	}
 
-	//K
+	if (character == 'K') {
+		drawFillRect(x, y, x + 2 * scale, y + 18 * scale, r, g, b, a);
+		drawFillRect(x + 7 * scale, y, x + 9 * scale, y + 7.5 * scale, r, g, b, a);
+		drawFillRect(x + 2 * scale, y + 8 * scale, x + 8 * scale, y + 9 * scale, r, g, b, a);
+		if (scale == 1)
+			drawFillRect(x + 7 * scale, y + 10 * scale, x + 9 * scale, y + 17 * scale, r, g, b, a);
+		else
+			drawFillRect(x + 7 * scale, y + 9 * scale + 1, x + 9 * scale, y + 17 * scale, r, g, b, a);
+
+		drawFillRect(x + 7 * scale, y + 17 * scale, x + 10.5 * scale, y + 18 * scale, r, g, b, a);
+	}
 
 	if (character == 'L') {
 		drawFillRect(x, y, x + 2 * scale, y + 18 * scale, r, g, b, a);
@@ -672,18 +573,7 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 
 	//M
 
-	// if (character == 'N') { //too edgy, not scalable
-	// 	drawFillRect(x, y, x + 2, y + 19, r, g, b, a);
-	// 	int i, plusx = 3, plusy = 0;
-	// 	for (i = 0; i < 5; ++i) {
-	// 		drawLine(x + plusx, y + plusy, x + plusx, y + plusy + 3, r, g, b, a);
-	// 		++plusx;
-	// 		drawLine(x + plusx, y + plusy, x + plusx, y + plusy + 3, r, g, b, a);
-	// 		++plusx;
-	// 		plusy += 4;
-	// 	}
-	// 	drawFillRect(x + 13, y, x + 15, y + 19, r, g, b, a);
-	// }
+	//N
 
 	if (character == 'O') {
 		drawFillRect(x + 1 * scale, y, x + 8 * scale, y + 2 * scale, r, g, b, a);
@@ -772,7 +662,17 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 3 * scale, y + 9 * scale, x + 5 * scale, y + 18 * scale, r, g, b, a);
 	}
 
-	//Z
+	if (character == 'Z') {
+		drawFillRect(x, y, x + 8 * scale, y + 1.5 * scale, r, g, b, a);
+		drawFillRect(x + 6 * scale, y + 1 * scale, x + 8 * scale, y + 4 * scale, r, g, b, a);
+		drawFillRect(x + 5 * scale, y + 4.5 * scale, x + 7 * scale, y + 7.5 * scale, r, g, b, a);
+
+		drawFillRect(x + 3 * scale, y + 8 * scale, x + 5 * scale, y + 10 * scale, r, g, b, a);
+
+		drawFillRect(x + 1 * scale, y + 10.5 * scale, x + 3 * scale, y + 13.5 * scale, r, g, b, a);
+		drawFillRect(x, y + 14 * scale, x + 2 * scale, y + 17 * scale, r, g, b, a);
+		drawFillRect(x, y + 16.5 * scale, x + 8 * scale, y + 18 * scale, r, g, b, a);
+	}
 }
 
 void fillTV(char r, char g, char b, char a)
