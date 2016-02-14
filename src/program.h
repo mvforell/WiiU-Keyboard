@@ -54,5 +54,6 @@ void render(struct renderFlags *flags);
 void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a);
 void fillTV(char r, char g, char b, char a);
 void drawStringTV(int x, int line, char * string);
+void drawOwnString(int xpos, int ypos, char * string, int length, char r, char g, char b, char a);
 
 #endif /* PROGRAM_H */
