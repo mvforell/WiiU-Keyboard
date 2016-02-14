@@ -1,7 +1,7 @@
 #include "program.h"
 
 #define WAIT_KEY 0x0A00000
-#define WAIT_MENU 0x1000000
+#define WAIT_MENU 0x1900000
 
 void _entryPoint()
 {
@@ -58,6 +58,9 @@ void _entryPoint()
 	flags.keyBackspacePressed=0;
 	flags.b=0;
 	flags.plus=0;
+	flags.bTouched=0;
+	flags.plusTouched=0;
+	flags.HomeTouched=0;
 	
 	VPADData vpad_data;
 
@@ -86,7 +89,7 @@ void _entryPoint()
 				int wait = WAIT_MENU;
 				while (--wait) {}
 			}
-			if (vpad_data.tpdata.x > 3000 && vpad_data.tpdata.x < 3700 && vpad_data.tpdata.y < 3250 && vpad_data.tpdata.y > 3100) {
+			if (flags.menu && vpad_data.tpdata.x > 3000 && vpad_data.tpdata.x < 3700 && vpad_data.tpdata.y < 3250 && vpad_data.tpdata.y > 3100) {
 				flags.change_theme = 1;
 				int wait = WAIT_MENU;
 				while (--wait) {}
@@ -97,6 +100,19 @@ void _entryPoint()
 				flags.menu = 0;
 				int wait = WAIT_MENU;
 				while (--wait) {}
+			}
+			if (vpad_data.tpdata.x > 3770 && vpad_data.tpdata.x < 3910 && vpad_data.tpdata.y < 520 && vpad_data.tpdata.y > 250) {
+				int wait = WAIT_MENU;
+				while (--wait) {}
+				if (flags.menu)
+					flags.bTouched=1;
+				else
+					flags.plusTouched=1;
+			}
+			if (vpad_data.tpdata.x > 140 && vpad_data.tpdata.x < 350 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 230) {
+				int wait = WAIT_MENU;
+				while (--wait) {}
+				flags.HomeTouched=1;
 			}
 			if (vpad_data.tpdata.x > 320 && vpad_data.tpdata.x < 410 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'A';
@@ -147,7 +163,7 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyHPressed=1;
 			}
-			if (vpad_data.tpdata.x > 1230 && vpad_data.tpdata.x < 1265 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 1250 && vpad_data.tpdata.x < 1280 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'I';
 				++flags.textLength;
 				int wait = WAIT_KEY;
@@ -196,6 +212,13 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyRPressed=1;
 			}
+			if (vpad_data.tpdata.x > 2380 && vpad_data.tpdata.x < 2460 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'S';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keySPressed=1;
+			}
 			if (vpad_data.tpdata.x > 2490 && vpad_data.tpdata.x < 2580 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'T';
 				++flags.textLength;
@@ -241,13 +264,13 @@ void _entryPoint()
 				}
 			}
 		}
-		if (vpad_data.btn_hold & BUTTON_B)
+		if ((vpad_data.btn_hold & BUTTON_B) || flags.bTouched)
 			flags.b=1;
 
-		if (vpad_data.btn_hold & BUTTON_PLUS)
+		if ((vpad_data.btn_hold & BUTTON_PLUS) || flags.plusTouched)
 			flags.plus=1;
 
-		if(vpad_data.btn_hold & BUTTON_HOME)
+		if((vpad_data.btn_hold & BUTTON_HOME) || flags.HomeTouched)
 			break;
 
 		render(&flags);
@@ -274,7 +297,6 @@ void render(struct renderFlags *flags)
 		if (flags->menu) {
 			drawString(0, 4, "Current theme: ");
 			drawString(15, 4, flags->theme);
-			drawString(0, 15, "Press B to go back.");
 
 			if (!flags->change_theme) {
 				drawString(27, 0, "SETTINGS");
@@ -394,18 +416,29 @@ void render(struct renderFlags *flags)
 			drawString(25, 16, flags->touching);
 		}
 
-		if (flags->plus) {
-			drawFillCircle(820, 450, 16, 255, 255, 0, 0);
-			drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-			drawFillRect(818, 440, 822, 460, 255, 255, 0, 0);
-			drawFillRect(810, 452, 830, 448, 255, 255, 0, 0);
+		if (!flags->menu) {
+			if (flags->plus) {
+				drawFillCircle(820, 450, 16, 255, 255, 0, 0);
+				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+				drawFillRect(818, 440, 822, 460, 255, 255, 0, 0);
+				drawFillRect(810, 452, 830, 448, 255, 255, 0, 0);
+			} else {
+				drawFillCircle(820, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+				drawFillRect(818, 440, 822, 460, 255, 255, 255, 0);
+				drawFillRect(810, 452, 830, 448, 255, 255, 255, 0);
+			}
 		} else {
-			drawFillCircle(820, 450, 16, 255, 255, 255, 0);
-			drawFillCircle(820, 450, 13, 64, 64, 64, 0);
-			drawFillRect(818, 440, 822, 460, 255, 255, 255, 0);
-			drawFillRect(810, 452, 830, 448, 255, 255, 255, 0);
+			if (flags->b) {
+				drawFillCircle(820, 450, 16, 255, 255, 0, 0);
+				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+				drawChar('B', 816, 441, 1, 255, 255, 0, 0);
+			} else {
+				drawFillCircle(820, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+				drawChar('B', 816, 441, 1, 255, 255, 255, 0);
+			}
 		}
-
 		drawFillCircle(30, 452, 22, 255, 255, 255, 0);
 		drawFillCircle(30, 452, 19, 64, 64, 64, 0);
 
@@ -456,9 +489,12 @@ void render(struct renderFlags *flags)
 	flags->keyBackspacePressed=0;
 	flags->b=0;
 	flags->plus=0;
+	flags->bTouched=0;
+	flags->plusTouched=0;
+	flags->HomeTouched=0;
 }
 
-void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   20/26 = ~77%   */
+void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a) /*   21/26 = ~81%   */
 {
 	int x = xpos, y = ypos;
 
@@ -545,6 +581,7 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 	}
 
 	if (character == 'I') {
+		x += 6;
 		drawFillRect(x, y, x + 2 * scale, y + 18 * scale, r, g, b, a);
 	}
 
@@ -619,7 +656,23 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 7 * scale, y + 17 * scale, x + 10.5 * scale, y + 18 * scale, r, g, b, a);
 	}
 
-	//S
+	if (character == 'S') {
+		x += 2;
+		if (scale == 1)
+			drawFillRect(x + 7 * scale, y + 2 * scale, x + 8 * scale, y + 3 * scale, r, g, b, a);
+		else
+			drawFillRect(x + 6.5 * scale, y + 1.5 * scale, x + 8 * scale, y + 3 * scale, r, g, b, a);
+
+		drawFillRect(x + 1 * scale, y, x + 7 * scale, y + 1 * scale, r, g, b, a);
+		drawFillRect(x, y + 1.5 * scale, x + 1.5 * scale, y + 8 * scale, r, g, b, a);
+
+		drawFillRect(x + 1 * scale, y + 8.5 * scale, x + 7 * scale, y + 9.5 * scale, r, g, b, a);
+
+		drawFillRect(x + 6.5 * scale, y + 10 * scale, x + 8 * scale, y + 16.5 * scale, r, g, b, a);
+		drawFillRect(x + 1 * scale, y + 17 * scale, x + 7 * scale, y + 18 * scale, r, g, b, a);
+
+		drawFillRect(x, y + 15 * scale, x + 1.5 * scale, y + 16.5 * scale, r, g, b, a);
+	}
 
 	if (character == 'T') {
 		drawFillRect(x, y, x + 10 * scale, y + 1.5 * scale, r, g, b, a);
