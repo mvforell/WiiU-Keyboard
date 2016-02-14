@@ -206,7 +206,14 @@ void _entryPoint()
 				while (--wait) {}
 				flags.keyMPressed=1;
 			}
-			if (vpad_data.tpdata.x > 1910 && vpad_data.tpdata.x < 2000 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+			if (vpad_data.tpdata.x > 1800 && vpad_data.tpdata.x < 1900 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
+				flags.text[flags.textLength - 1] = 'N';
+				++flags.textLength;
+				int wait = WAIT_KEY;
+				while (--wait) {}
+				flags.keyNPressed=1;
+			}
+			if (vpad_data.tpdata.x > 1915 && vpad_data.tpdata.x < 2005 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1600) {
 				flags.text[flags.textLength - 1] = 'O';
 				++flags.textLength;
 				int wait = WAIT_KEY;
@@ -353,70 +360,67 @@ void render(struct renderFlags *flags)
 			int i, x = 50, y, plusy = 0, minusy = 0;
 			char c = 'A';
 			for (i = 0; i < 26; ++i) {
-				if (c != 'N')
-					drawChar(c, x, 230, 1, 255, 255, 255, 0);
+				drawChar(c, x, 230, 1, 255, 255, 255, 0);
 				c++;
 				x += 25;
 			}
 			c = 'A';
 			x = 50;
 			for (i = 0; i < 26; ++i) {
-				if (c != 'N') {
-					if (c == 'A' && flags->keyAPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'B' && flags->keyBPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'C' && flags->keyCPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'D' && flags->keyDPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'E' && flags->keyEPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'F' && flags->keyFPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'G' && flags->keyGPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'H' && flags->keyHPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'I' && flags->keyIPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'J' && flags->keyJPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'K' && flags->keyKPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'L' && flags->keyLPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'M' && flags->keyMPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'N' && flags->keyNPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'O' && flags->keyOPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'P' && flags->keyPPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'Q' && flags->keyQPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'R' && flags->keyRPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'S' && flags->keySPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'T' && flags->keyTPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'U' && flags->keyUPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'V' && flags->keyVPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'W' && flags->keyWPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'X' && flags->keyXPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'Y' && flags->keyYPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else if (c == 'Z' && flags->keyZPressed)
-						drawChar(c, x, 255, 2, 255, 255, 0, 0);
-					else
-						drawChar(c, x, 255, 2, 255, 255, 255, 0);
-				}
+				if (c == 'A' && flags->keyAPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'B' && flags->keyBPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'C' && flags->keyCPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'D' && flags->keyDPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'E' && flags->keyEPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'F' && flags->keyFPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'G' && flags->keyGPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'H' && flags->keyHPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'I' && flags->keyIPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'J' && flags->keyJPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'K' && flags->keyKPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'L' && flags->keyLPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'M' && flags->keyMPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'N' && flags->keyNPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'O' && flags->keyOPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'P' && flags->keyPPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'Q' && flags->keyQPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'R' && flags->keyRPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'S' && flags->keySPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'T' && flags->keyTPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'U' && flags->keyUPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'V' && flags->keyVPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'W' && flags->keyWPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'X' && flags->keyXPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'Y' && flags->keyYPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else if (c == 'Z' && flags->keyZPressed)
+					drawChar(c, x, 255, 2, 255, 255, 0, 0);
+				else
+					drawChar(c, x, 255, 2, 255, 255, 255, 0);
 				c++;
 				x += 25;
 			}
@@ -678,9 +682,24 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 		drawFillRect(x + 9 * scale, y, x + 10.5 * scale, y + 18 * scale, r, g, b, a);
 	}
 
-	//N
+	if (character == 'N') {
+		x -= 1;
+		drawFillRect(x, y, x + 1.5 * scale, y + 18 * scale, r, g, b, a);
+
+		for (i = 0; i < 5; ++i) {
+			drawFillRect(x + 2 * scale + 1.5 * i * scale, y + 0.5 * scale + 3.5 * i * scale, x + 3.5 * scale + 1.5 * i * scale, y + 3.5 * scale + 3.5 * i * scale, r, g, b, a);
+		}
+		drawFillRect(x, y, x + 3.5 * scale, y, r, g, b, a);
+		drawFillRect(x + 8 * scale, y + 18 * scale, x + 11 * scale, y + 18 * scale, r, g, b, a);
+
+		if (scale == 1)
+			drawFillRect(x + 10 * scale, y, x + 11 * scale, y + 18 * scale, r, g, b, a);
+		else
+			drawFillRect(x + 9.5 * scale, y, x + 11 * scale, y + 18 * scale, r, g, b, a);
+	}
 
 	if (character == 'O') {
+		x += 1;
 		drawFillRect(x + 1 * scale, y, x + 8 * scale, y + 2 * scale, r, g, b, a);
 
 		drawFillRect(x + 7 * scale, y + 2 * scale, x + 9 * scale, y + 16 * scale, r, g, b, a);
