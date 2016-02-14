@@ -37,6 +37,7 @@ struct renderFlags {
 	int keyYPressed;
 	int keyZPressed;
 	int keyBackspacePressed;
+	int keySpacePressed;
 	int b;
 	int plus;
 	int bTouched;
