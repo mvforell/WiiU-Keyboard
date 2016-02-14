@@ -323,7 +323,7 @@ void render(struct renderFlags *flags)
 		if (flags->menu) {
 			drawString(0, 4, "Current theme: ");
 			drawString(15, 4, flags->theme);
-			drawString(0, 16, "Press B to go back, HOME to exit.");
+			drawString(0, 15, "Press B to go back.");
 
 			if (!flags->change_theme) {
 				drawString(27, 0, "SETTINGS");
@@ -474,14 +474,34 @@ void render(struct renderFlags *flags)
 			drawString(25, 16, flags->touching);
 		}
 
+		if (flags->plus) {
+			drawFillCircle(820, 450, 16, 255, 255, 0, 0);
+			drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+			drawFillRect(818, 440, 822, 460, 255, 255, 0, 0);
+			drawFillRect(810, 452, 830, 448, 255, 255, 0, 0);
+		} else {
+			drawFillCircle(820, 450, 16, 255, 255, 255, 0);
+			drawFillCircle(820, 450, 13, 64, 64, 64, 0);
+			drawFillRect(818, 440, 822, 460, 255, 255, 255, 0);
+			drawFillRect(810, 452, 830, 448, 255, 255, 255, 0);
+		}
+
+		drawFillCircle(30, 452, 22, 255, 255, 255, 0);
+		drawFillCircle(30, 452, 19, 64, 64, 64, 0);
+
+		int m, x = 15, y = 450;
+		for (m = 0; m < 16; ++m) {
+			drawLine(x + m, y, x + 30 - m, y + m, 255, 255, 255, 0);
+			--y;
+		}
+		drawFillRect(20, 450, 40, 465, 255, 255, 255, 0);
+		drawFillRect(26, 453, 34, 458, 64, 64, 64, 0); //y: 430 - 460, x: 12 - 48 -> (30, 445), r = 18
+
 		fillTV(64, 64, 64, 0);
 
 		drawStringTV(45, 0, "Keyboard");
 		drawStringTV(0, 3, "Your text:");
-		if (flags->text[0] == ' ')
-			drawStringTV(0, 5, "<no input>");
-		else
-			drawStringTV(0, 5, flags->text);
+		drawStringTV(0, 5, flags->text);
 
 		flipBuffers();
 	}
