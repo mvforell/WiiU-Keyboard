@@ -1,7 +1,6 @@
 #include "program.h"
 
-#define WAIT_KEY 0x0080000
-#define WAIT_MENU 0x0900000
+#define WAIT 0x0002000
 
 void _entryPoint()
 {
@@ -55,11 +54,14 @@ void _entryPoint()
 	flags.keyXPressed=0;
 	flags.keyYPressed=0;
 	flags.keyZPressed=0;
+	flags.keyColonPressed=0;
+	flags.keyPeriodPressed=0;
 	flags.keyBackspacePressed=0;
 	flags.keySpacePressed=0;
 	flags.b=0;
 	flags.plus=0;
 	flags.bTouched=0;
+	flags.xTouched=0;
 	flags.plusTouched=0;
 	flags.HomeTouched=0;
 	
@@ -75,7 +77,7 @@ void _entryPoint()
 	//Read initial vpad status
 	VPADRead(0, &vpad_data, 1, &error);
 
-	while(1)
+	while (1)
 	{
 		VPADRead(0, &vpad_data, 1, &error);
 		
@@ -88,236 +90,240 @@ void _entryPoint()
 					flags.QWERTY = 1;
 				else
 					flags.QWERTY = 0;
-				int wait = WAIT_MENU;
+				flags.change_theme = 0;
+				flags.menu = 0;
+				int wait = WAIT;
 				while (--wait) {}
 			}
 			if (flags.menu && vpad_data.tpdata.x > 2950 && vpad_data.tpdata.x < 3640 && vpad_data.tpdata.y < 3290 && vpad_data.tpdata.y > 3120) {
 				flags.change_theme = 1;
-				int wait = WAIT_MENU;
+				int wait = WAIT;
 				while (--wait) {}
 			}
 			if (flags.change_theme && vpad_data.tpdata.x > 365 && vpad_data.tpdata.x < 720 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3120) {
 				__os_snprintf(flags.theme, 32, "Classic");
 				flags.change_theme = 0;
 				flags.menu = 0;
-				int wait = WAIT_MENU;
+				int wait = WAIT;
 				while (--wait) {}
 			}
 			if (vpad_data.tpdata.x > 3770 && vpad_data.tpdata.x < 3910 && vpad_data.tpdata.y < 520 && vpad_data.tpdata.y > 250) {
-				int wait = WAIT_MENU;
+				int wait = WAIT;
 				while (--wait) {}
 				if (flags.menu)
 					flags.bTouched=1;
 				else
 					flags.plusTouched=1;
 			}
+			if (vpad_data.tpdata.x > 3740 && vpad_data.tpdata.x < 3930 && vpad_data.tpdata.y < 3815 && vpad_data.tpdata.y > 3490) {
+				flags.xTouched=1;
+			}
 			if (vpad_data.tpdata.x > 110 && vpad_data.tpdata.x < 320 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 215) {
 				flags.HomeTouched=1;
 			}
-			if (vpad_data.tpdata.x > 320 && vpad_data.tpdata.x < 410 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+
+
+			if (vpad_data.tpdata.x > 545 && vpad_data.tpdata.x < 775 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'A';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyAPressed=1;
-			}
-			if (vpad_data.tpdata.x > 430 && vpad_data.tpdata.x < 520 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1625 && vpad_data.tpdata.x < 1865 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'B';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyBPressed=1;
-			}
-			if (vpad_data.tpdata.x > 540 && vpad_data.tpdata.x < 625 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1090 && vpad_data.tpdata.x < 1325 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'C';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyCPressed=1;
-			}
-			if (vpad_data.tpdata.x > 660 && vpad_data.tpdata.x < 745 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1090 && vpad_data.tpdata.x < 1325 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'D';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyDPressed=1;
-			}
-			if (vpad_data.tpdata.x > 775 && vpad_data.tpdata.x < 860 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1090 && vpad_data.tpdata.x < 1325 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'E';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyEPressed=1;
-			}
-			if (vpad_data.tpdata.x > 890 && vpad_data.tpdata.x < 980 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1350 && vpad_data.tpdata.x < 1595 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'F';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyFPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1000 && vpad_data.tpdata.x < 1080 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1625 && vpad_data.tpdata.x < 1865 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'G';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyGPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1115 && vpad_data.tpdata.x < 1200 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1900 && vpad_data.tpdata.x < 2155 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'H';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyHPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1225 && vpad_data.tpdata.x < 1260 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2450 && vpad_data.tpdata.x < 2700 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'I';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyIPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1340 && vpad_data.tpdata.x < 1430 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2175 && vpad_data.tpdata.x < 2430 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'J';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyJPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1450 && vpad_data.tpdata.x < 1550 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2450 && vpad_data.tpdata.x < 2700 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'K';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyKPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1570 && vpad_data.tpdata.x < 1655 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2725 && vpad_data.tpdata.x < 2965 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'L';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyLPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1685 && vpad_data.tpdata.x < 1780 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2175 && vpad_data.tpdata.x < 2430 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'M';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyMPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1800 && vpad_data.tpdata.x < 1900 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1900 && vpad_data.tpdata.x < 2155 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'N';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyNPressed=1;
-			}
-			if (vpad_data.tpdata.x > 1910 && vpad_data.tpdata.x < 2000 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2725 && vpad_data.tpdata.x < 2965 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'O';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyOPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2025 && vpad_data.tpdata.x < 2115 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2990 && vpad_data.tpdata.x < 3230 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'P';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyPPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2140 && vpad_data.tpdata.x < 2235 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 545 && vpad_data.tpdata.x < 775 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'Q';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyQPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2255 && vpad_data.tpdata.x < 2350 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1350 && vpad_data.tpdata.x < 1595 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'R';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyRPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2370 && vpad_data.tpdata.x < 2450 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 810 && vpad_data.tpdata.x < 1065 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'S';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keySPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2485 && vpad_data.tpdata.x < 2580 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1625 && vpad_data.tpdata.x < 1865 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'T';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyTPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2600 && vpad_data.tpdata.x < 2700 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 2175 && vpad_data.tpdata.x < 2430 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'U';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyUPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2715 && vpad_data.tpdata.x < 2815 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 1350 && vpad_data.tpdata.x < 1595 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'V';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyVPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2825 && vpad_data.tpdata.x < 2930 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 810 && vpad_data.tpdata.x < 1065 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
 				flags.text[flags.textLength - 1] = 'W';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyWPressed=1;
-			}
-			if (vpad_data.tpdata.x > 2940 && vpad_data.tpdata.x < 3035 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
+			} else if (vpad_data.tpdata.x > 810 && vpad_data.tpdata.x < 1065 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
 				flags.text[flags.textLength - 1] = 'X';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keyXPressed=1;
-			}
-			if (vpad_data.tpdata.x > 3055 && vpad_data.tpdata.x < 3135 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
-				flags.text[flags.textLength - 1] = 'Y';
+			} else if (vpad_data.tpdata.x > 545 && vpad_data.tpdata.x < 775 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
+				if (flags.QWERTY)
+					flags.text[flags.textLength - 1] = 'Z';
+				else
+					flags.text[flags.textLength - 1] = 'Y';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
-				flags.keyYPressed=1;
-			}
-			if (vpad_data.tpdata.x > 3170 && vpad_data.tpdata.x < 3250 && vpad_data.tpdata.y < 1990 && vpad_data.tpdata.y > 1690) {
-				flags.text[flags.textLength - 1] = 'Z';
+				if (flags.QWERTY)
+					flags.keyZPressed=1;
+				else
+					flags.keyYPressed=1;
+			} else if (vpad_data.tpdata.x > 1900 && vpad_data.tpdata.x < 2155 && vpad_data.tpdata.y < 2420 && vpad_data.tpdata.y > 1950) {
+				if (flags.QWERTY)
+					flags.text[flags.textLength - 1] = 'Y';
+				else
+					flags.text[flags.textLength - 1] = 'Z';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
-				flags.keyZPressed=1;
-			}
-			if (vpad_data.tpdata.x > 3500 && vpad_data.tpdata.x < 3660 && vpad_data.tpdata.y < 2100 && vpad_data.tpdata.y > 1935) { //intentionally bigger
+				if (flags.QWERTY)
+					flags.keyYPressed=1;
+				else
+					flags.keyZPressed=1;
+			} else if (vpad_data.tpdata.x > 2450 && vpad_data.tpdata.x < 2700 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
+				flags.text[flags.textLength - 1] = ':';
+				++flags.textLength;
+				int wait = WAIT;
+				while (--wait) {}
+				flags.keyColonPressed=1;
+			} else if (vpad_data.tpdata.x > 2725 && vpad_data.tpdata.x < 2965 && vpad_data.tpdata.y < 1360 && vpad_data.tpdata.y > 850) {
+				flags.text[flags.textLength - 1] = '.';
+				++flags.textLength;
+				int wait = WAIT;
+				while (--wait) {}
+				flags.keyPeriodPressed=1;
+			} else if (vpad_data.tpdata.x > 3295 && vpad_data.tpdata.x < 3645 && vpad_data.tpdata.y < 2375 && vpad_data.tpdata.y > 2000) { //intentionally bigger
 				if (flags.textLength > 1) {
 					--flags.textLength;
 					flags.text[flags.textLength - 1] = ' ';
-					int wait = WAIT_KEY;
+					int wait = WAIT;
 					while (--wait) {}
 					flags.keyBackspacePressed=1;
 				}
-			}
-			if (vpad_data.tpdata.x > 3440 && vpad_data.tpdata.x < 3730 && vpad_data.tpdata.y < 1820 && vpad_data.tpdata.y > 1660) {
+			} else if (vpad_data.tpdata.x > 3080 && vpad_data.tpdata.x < 3725 && vpad_data.tpdata.y < 1760 && vpad_data.tpdata.y > 1485) {
 				flags.text[flags.textLength - 1] = ' ';
 				++flags.textLength;
-				int wait = WAIT_KEY;
+				int wait = WAIT;
 				while (--wait) {}
 				flags.keySpacePressed=1;
 			}
 		}
 
-		if (vpad_data.btn_hold & BUTTON_X) {
+		if ((vpad_data.btn_hold & BUTTON_X) || flags.xTouched) {
 			for (n = 0; n < flags.textLength; ++n)
 				flags.text[n] = ' ';
-			flags.textLength = 0;
+			flags.textLength = 1;
 		}
 
 		if ((vpad_data.btn_hold & BUTTON_B) || flags.bTouched)
@@ -353,7 +359,8 @@ void render(struct renderFlags *flags)
 		if (flags->menu) {
 			drawOwnString(60, 120, "Current theme: ", 15, 255, 255, 255, 0);
 			drawOwnString(260, 120, flags->theme, 7, 255, 255, 255, 0);
-			drawOwnString(60, 200, "NOTE: no use yet.", 17, 255, 255, 255, 0);
+			if (flags->change_theme)
+				drawOwnString(60, 200, "NOTE: no use yet.", 17, 255, 255, 255, 0);
 
 			if (!flags->change_theme) {
 				drawOwnString(365, 30, "Settings", 8, 255, 255, 255, 0);
@@ -369,6 +376,7 @@ void render(struct renderFlags *flags)
 				drawOwnString(60, 80, "Classic", 7, 255, 255, 255, 0);
 			}
 		}
+
 		if(flags->b) {
 			flags->menu = 0;
 			flags->change_theme = 0;
@@ -380,73 +388,259 @@ void render(struct renderFlags *flags)
 		if (!flags->menu) {
 			drawOwnString(365, 30, "Keyboard", 8, 255, 255, 255, 0);
 
-			int i, x = 50, y = 245, plusy = 0, minusy = 0;
-			char c = 'A';
-			x = 50;
-			for (i = 0; i < 26; ++i) {
-				if (c == 'A' && flags->keyAPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'B' && flags->keyBPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'C' && flags->keyCPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'D' && flags->keyDPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'E' && flags->keyEPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'F' && flags->keyFPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'G' && flags->keyGPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'H' && flags->keyHPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'I' && flags->keyIPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'J' && flags->keyJPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'K' && flags->keyKPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'L' && flags->keyLPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'M' && flags->keyMPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'N' && flags->keyNPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'O' && flags->keyOPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'P' && flags->keyPPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'Q' && flags->keyQPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'R' && flags->keyRPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'S' && flags->keySPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'T' && flags->keyTPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'U' && flags->keyUPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'V' && flags->keyVPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'W' && flags->keyWPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'X' && flags->keyXPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'Y' && flags->keyYPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else if (c == 'Z' && flags->keyZPressed)
-					drawChar(c, x, y, 2, 255, 255, 0, 0);
-				else
-					drawChar(c, x, y, 2, 255, 255, 255, 0);
-				c++;
-				x += 25;
-			}
-			//TODO: drawChar(':', x, y, 2, 255, 255, 255, 0);
-			//TODO: drawChar('.', x + 5, y, 2, 255, 255, 255, 0);
+			int i, x = 115, y = 200, plusy = 0, minusy = 0;
 
-			x = 750;
-			y = 240;
-			for (i = 0; i < 10; ++i)
+
+			if (flags->keyQPressed) {
+				drawFillRect(97, 185, 152, 250, 100, 100, 100, 0);
+				drawChar('Q', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('Q', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyWPressed) {
+				drawFillRect(155, 185, 214, 250, 100, 100, 100, 0);
+				drawChar('W', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('W', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyEPressed) {
+				drawFillRect(215, 185, 272, 250, 100, 100, 100, 0);
+				drawChar('E', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('E', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyRPressed) {
+				drawFillRect(273, 185, 332, 250, 100, 100, 100, 0);
+				drawChar('R', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('R', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyTPressed) {
+				drawFillRect(333, 185, 391, 250, 100, 100, 100, 0);
+				drawChar('T', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('T', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->QWERTY) {
+				if (flags->keyYPressed) {
+					drawFillRect(392, 185, 452, 250, 100, 100, 100, 0);
+					drawChar('Y', x, y, 2, 255, 255, 0, 0);
+				} else {
+					drawChar('Y', x, y, 2, 255, 255, 255, 0);
+				}
+				x += 60;
+			} else {
+				if (flags->keyZPressed) {
+					drawFillRect(392, 185, 452, 250, 100, 100, 100, 0);
+					drawChar('Z', x, y, 2, 255, 255, 0, 0);
+				} else {
+					drawChar('Z', x, y, 2, 255, 255, 255, 0);
+				}
+				x += 60;
+			}
+			if (flags->keyUPressed) {
+				drawFillRect(453, 185, 512, 250, 100, 100, 100, 0);
+				drawChar('U', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('U', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 68;
+			if (flags->keyIPressed) {
+				drawFillRect(513, 185, 572, 250, 100, 100, 100, 0);
+				drawChar('I', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('I', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 52;
+			if (flags->keyOPressed) {
+				drawFillRect(573, 185, 631, 250, 100, 100, 100, 0);
+				drawChar('O', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('O', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyPPressed) {
+				drawFillRect(632, 185, 690, 250, 100, 100, 100, 0);
+				drawChar('P', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('P', x, y, 2, 255, 255, 255, 0);
+			}
+
+
+			
+			y += 70;
+			x = 115;
+			if (flags->keyAPressed) {
+				drawFillRect(97, 255, 152, 320, 100, 100, 100, 0);
+				drawChar('A', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('A', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keySPressed) {
+				drawFillRect(153, 255, 214, 320, 100, 100, 100, 0);
+				drawChar('S', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('S', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyDPressed) {
+				drawFillRect(215, 255, 272, 320, 100, 100, 100, 0);
+				drawChar('D', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('D', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyFPressed) {
+				drawFillRect(273, 255, 332, 320, 100, 100, 100, 0);
+				drawChar('F', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('F', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyGPressed) {
+				drawFillRect(333, 255, 391, 320, 100, 100, 100, 0);
+				drawChar('G', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('G', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 61;
+			if (flags->keyHPressed) {
+				drawFillRect(392, 255, 452, 320, 100, 100, 100, 0);
+				drawChar('H', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('H', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 59;
+			if (flags->keyJPressed) {
+				drawFillRect(453, 255, 512, 320, 100, 100, 100, 0);
+				drawChar('J', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('J', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 61;
+			if (flags->keyKPressed) {
+				drawFillRect(513, 255, 572, 320, 100, 100, 100, 0);
+				drawChar('K', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('K', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyLPressed) {
+				drawFillRect(573, 255, 631, 320, 100, 100, 100, 0);
+				drawChar('L', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('L', x, y, 2, 255, 255, 255, 0);
+			}
+
+
+
+			y += 70;
+			x = 115;
+			if (flags->QWERTY) {
+				if (flags->keyZPressed) {
+					drawFillRect(97, 325, 152, 390, 100, 100, 100, 0);
+					drawChar('Z', x, y, 2, 255, 255, 0, 0);
+				} else {
+					drawChar('Z', x, y, 2, 255, 255, 255, 0);
+				}
+				x += 60;
+			} else {
+				if (flags->keyYPressed) {
+					drawFillRect(97, 325, 152, 390, 100, 100, 100, 0);
+					drawChar('Y', x, y, 2, 255, 255, 0, 0);
+				} else {
+					drawChar('Y', x, y, 2, 255, 255, 255, 0);
+				}
+				x += 60;
+			}
+			if (flags->keyXPressed) {
+				drawFillRect(153, 325, 214, 390, 100, 100, 100, 0);
+				drawChar('X', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('X', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyCPressed) {
+				drawFillRect(215, 325, 272, 390, 100, 100, 100, 0);
+				drawChar('C', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('C', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyVPressed) {
+				drawFillRect(273, 325, 332, 390, 100, 100, 100, 0);
+				drawChar('V', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('V', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyBPressed) {
+				drawFillRect(333, 325, 391, 390, 100, 100, 100, 0);
+				drawChar('B', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('B', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyNPressed) {
+				drawFillRect(392, 325, 452, 390, 100, 100, 100, 0);
+				drawChar('N', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('N', x, y, 2, 255, 255, 255, 0);
+			}
+			x += 60;
+			if (flags->keyMPressed) {
+				drawFillRect(453, 325, 512, 390, 100, 100, 100, 0);
+				drawChar('M', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('M', x, y, 2, 255, 255, 255, 0);
+			}
+
+			y += 10;
+			x += 69;
+			if (flags->keyColonPressed) {
+				drawFillRect(513, 325, 572, 390, 100, 100, 100, 0);
+				drawChar(':', x, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar(':', x, y, 2, 255, 255, 255, 0);
+			}
+			
+			y -= 7;
+			x += 54;
+			if (flags->keyPeriodPressed) {
+				drawFillRect(573, 325, 631, 390, 100, 100, 100, 0);
+				drawChar('.', x + 5, y, 2, 255, 255, 0, 0);
+			} else {
+				drawChar('.', x + 5, y, 2, 255, 255, 255, 0);
+			}			
+
+
+			drawFillRect(95, 183, 695, 188, 255, 255, 255, 0);
+			drawFillRect(95, 250, 690, 255, 255, 255, 255, 0);
+			drawFillRect(95, 320, 630, 325, 255, 255, 255, 0);
+			drawFillRect(95, 390, 630, 395, 255, 255, 255, 0);
+
+			drawFillRect(92, 183, 97, 395, 255, 255, 255, 0);
+			drawFillRect(152, 185, 157, 395, 255, 255, 255, 0);
+			drawFillRect(214, 185, 219, 395, 255, 255, 255, 0);
+			drawFillRect(272, 185, 277, 395, 255, 255, 255, 0);
+			drawFillRect(332, 185, 337, 395, 255, 255, 255, 0);
+			drawFillRect(391, 185, 396, 395, 255, 255, 255, 0);
+			drawFillRect(452, 185, 457, 395, 255, 255, 255, 0);
+			drawFillRect(512, 185, 517, 395, 255, 255, 255, 0);
+			drawFillRect(572, 185, 577, 395, 255, 255, 255, 0);
+			drawFillRect(631, 185, 636, 395, 255, 255, 255, 0);
+
+			drawFillRect(690, 185, 695, 255, 255, 255, 255, 0);
+
+			x = 710;
+			y = 218;
+			for (i = 0; i < 20; ++i)
 			{
 				if (flags->keyBackspacePressed)
 					drawLine(x, y - minusy, x, y + plusy, 255, 255, 0, 0);
@@ -457,23 +651,24 @@ void render(struct renderFlags *flags)
 				++minusy;
 			}
 			if (flags->keyBackspacePressed)
-				drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 0, 0);
+				drawFillRect(x, y + 8, x + 40, y - 8, 255, 255, 0, 0);
 			else
-				drawFillRect(x, y + 3, x + 20, y - 3, 255, 255, 255, 0);
+				drawFillRect(x, y + 8, x + 40, y - 8, 255, 255, 255, 0);
 
 			if (flags->keySpacePressed) {
-				drawRect(735, 265, 800, 285, 255, 255, 0, 0);
-				drawRect(736, 264, 799, 286, 255, 255, 0, 0);
-				drawRect(737, 263, 798, 287, 255, 255, 0, 0);
+				drawFillRect(657, 275, 798, 307, 100, 100, 100, 0);
+				drawRect(655, 275, 800, 307, 255, 255, 0, 0);
+				drawRect(656, 274, 799, 308, 255, 255, 0, 0);
+				drawRect(657, 273, 798, 309, 255, 255, 0, 0);
 			} else {
-				drawRect(735, 265, 800, 285, 255, 255, 255, 0);
-				drawRect(736, 264, 799, 286, 255, 255, 255, 0);
-				drawRect(737, 263, 798, 287, 255, 255, 255, 0);
+				drawRect(655, 275, 800, 307, 255, 255, 255, 0);
+				drawRect(656, 274, 799, 308, 255, 255, 255, 0);
+				drawRect(657, 273, 798, 309, 255, 255, 255, 0);
 			}
 		}
 
 		if (!flags->change_theme && !flags->menu) {
-			drawOwnString(60, 100, "Your text:", 10, 255, 255, 255, 0);
+			drawOwnString(60, 90, "Your text:", 10, 255, 255, 255, 0);
 			drawOwnString(60, 130, flags->text, flags->textLength - 1, 255, 255, 255, 0);
 
 			//drawString(25, 16, flags->touching);
@@ -513,6 +708,19 @@ void render(struct renderFlags *flags)
 		drawFillRect(17, 450, 37, 465, 255, 255, 255, 0);
 		drawFillRect(23, 453, 31, 458, 64, 64, 64, 0);
 
+		// drawDiagLine(int x_start, int y_start, int y_end, int thickness, char left_right, char up_down, char r, char g, char b, char a)
+		if (flags->x) {
+			drawFillCircle(822, 30, 22, 255, 255, 0, 0);
+			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
+			drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 0, 0);
+			drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 0, 0);
+		} else {
+			drawFillCircle(822, 30, 22, 255, 255, 255, 0);
+			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
+			drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 255, 0);
+			drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 255, 0);
+		}
+
 		drawOwnString(370, 440, "by cmdj13", 9, 255, 255, 255, 0);
 
 		fillTV(64, 64, 64, 0);
@@ -551,11 +759,14 @@ void render(struct renderFlags *flags)
 	flags->keyXPressed=0;
 	flags->keyYPressed=0;
 	flags->keyZPressed=0;
+	flags->keyColonPressed=0;
+	flags->keyPeriodPressed=0;
 	flags->keyBackspacePressed=0;
 	flags->keySpacePressed=0;
 	flags->b=0;
 	flags->plus=0;
 	flags->bTouched=0;
+	flags->xTouched=0;
 	flags->plusTouched=0;
 	flags->HomeTouched=0;
 }
