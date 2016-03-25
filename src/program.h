@@ -51,6 +51,9 @@ struct renderFlags {
 	char theme[32];
 	char text[256];
 	char touching[32];
+	char rc;
+	char gc;
+	char bc;
 };
 
 void _entryPoint();

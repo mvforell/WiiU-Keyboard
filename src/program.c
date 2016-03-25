@@ -1,6 +1,6 @@
 #include "program.h"
 
-#define WAIT 0x0002000
+#define WAIT 0x1
 
 void _entryPoint()
 {
@@ -64,10 +64,13 @@ void _entryPoint()
 	flags.xTouched=0;
 	flags.plusTouched=0;
 	flags.HomeTouched=0;
+	flags.rc=255;
+	flags.gc=255;
+	flags.bc=255;
 	
 	VPADData vpad_data;
 
-	__os_snprintf(flags.theme, 32, "Classic");
+	__os_snprintf(flags.theme, 32, "Zelda       ");
 	__os_snprintf(flags.touching, 32, "");
 	flags.text[0] = ' ';
 	/****************************>            VPAD Loop            <****************************/
@@ -85,7 +88,7 @@ void _entryPoint()
 			flags.touch=1;
 			__os_snprintf(flags.touching, 32, "%i, %i", vpad_data.tpdata.x, vpad_data.tpdata.y);
 
-			if (vpad_data.tpdata.x > 370 && vpad_data.tpdata.x < 720 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3125) {
+			if (flags.menu && !flags.change_theme && vpad_data.tpdata.x > 370 && vpad_data.tpdata.x < 720 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3125) {
 				if (!flags.QWERTY)
 					flags.QWERTY = 1;
 				else
@@ -94,36 +97,52 @@ void _entryPoint()
 				flags.menu = 0;
 				int wait = WAIT;
 				while (--wait) {}
-			}
-			if (flags.menu && vpad_data.tpdata.x > 2950 && vpad_data.tpdata.x < 3640 && vpad_data.tpdata.y < 3290 && vpad_data.tpdata.y > 3120) {
+			} else if (flags.menu && vpad_data.tpdata.x > 2950 && vpad_data.tpdata.x < 3640 && vpad_data.tpdata.y < 3290 && vpad_data.tpdata.y > 3120) {
 				flags.change_theme = 1;
 				int wait = WAIT;
 				while (--wait) {}
-			}
-			if (flags.change_theme && vpad_data.tpdata.x > 365 && vpad_data.tpdata.x < 720 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3120) {
-				__os_snprintf(flags.theme, 32, "Classic");
+			} else if (flags.change_theme && vpad_data.tpdata.x > 365 && vpad_data.tpdata.x < 640 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3120) {
+				flags.rc = 255;
+				flags.gc = 255;
+				flags.bc = 255;
+				__os_snprintf(flags.theme, 32, "Zelda       ");
 				flags.change_theme = 0;
 				flags.menu = 0;
 				int wait = WAIT;
 				while (--wait) {}
-			}
-			if (vpad_data.tpdata.x > 3770 && vpad_data.tpdata.x < 3910 && vpad_data.tpdata.y < 520 && vpad_data.tpdata.y > 250) {
+			} else if (flags.change_theme && vpad_data.tpdata.x > 885 && vpad_data.tpdata.x < 1090 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3120) {
+				flags.rc = 0;
+				flags.gc = 255;
+				flags.bc = 0;
+				__os_snprintf(flags.theme, 32, "Link        ");
+				flags.change_theme = 0;
+				flags.menu = 0;
+				int wait = WAIT;
+				while (--wait) {}
+			} else if (flags.change_theme && vpad_data.tpdata.x > 1335 && vpad_data.tpdata.x < 1560 && vpad_data.tpdata.y < 3280 && vpad_data.tpdata.y > 3120) {
+				flags.rc = 0;
+				flags.gc = 255;
+				flags.bc = 255;
+				__os_snprintf(flags.theme, 32, "Zora        ");
+				flags.change_theme = 0;
+				flags.menu = 0;
+				int wait = WAIT;
+				while (--wait) {}
+			} else if (vpad_data.tpdata.x > 3770 && vpad_data.tpdata.x < 3910 && vpad_data.tpdata.y < 520 && vpad_data.tpdata.y > 250) {
 				int wait = WAIT;
 				while (--wait) {}
 				if (flags.menu)
 					flags.bTouched=1;
 				else
 					flags.plusTouched=1;
-			}
-			if (vpad_data.tpdata.x > 3740 && vpad_data.tpdata.x < 3930 && vpad_data.tpdata.y < 3815 && vpad_data.tpdata.y > 3490) {
+			} else if (vpad_data.tpdata.x > 3740 && vpad_data.tpdata.x < 3930 && vpad_data.tpdata.y < 3815 && vpad_data.tpdata.y > 3490) {
 				flags.xTouched=1;
-			}
-			if (vpad_data.tpdata.x > 110 && vpad_data.tpdata.x < 320 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 215) {
+			} else if (vpad_data.tpdata.x > 110 && vpad_data.tpdata.x < 320 && vpad_data.tpdata.y < 550 && vpad_data.tpdata.y > 215) {
 				flags.HomeTouched=1;
 			}
 
 
-			if (vpad_data.tpdata.x > 545 && vpad_data.tpdata.x < 775 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
+			else if (vpad_data.tpdata.x > 545 && vpad_data.tpdata.x < 775 && vpad_data.tpdata.y < 1900 && vpad_data.tpdata.y > 1400) {
 				flags.text[flags.textLength - 1] = 'A';
 				++flags.textLength;
 				int wait = WAIT;
@@ -324,15 +343,11 @@ void _entryPoint()
 			for (n = 0; n < flags.textLength; ++n)
 				flags.text[n] = ' ';
 			flags.textLength = 1;
-		}
-
-		if ((vpad_data.btn_hold & BUTTON_B) || flags.bTouched)
+		} else if ((vpad_data.btn_hold & BUTTON_B) || flags.bTouched)
 			flags.b=1;
-
-		if ((vpad_data.btn_hold & BUTTON_PLUS) || flags.plusTouched)
+		else if ((vpad_data.btn_hold & BUTTON_PLUS) || flags.plusTouched)
 			flags.plus=1;
-
-		if((vpad_data.btn_hold & BUTTON_HOME) || flags.HomeTouched)
+		else if((vpad_data.btn_hold & BUTTON_HOME) || flags.HomeTouched)
 			break;
 
 		render(&flags);
@@ -352,30 +367,33 @@ void _entryPoint()
 void render(struct renderFlags *flags)
 {
 	int i=0;
+	char rr = flags->rc, gg = flags->gc, bb = flags->bc;
 	for(i;i<2;i++)
 	{
-		fillScreen(64, 64, 64, 0); //The part until fillTV() will only be shown on the Gamepad
+		fillScreen(64, 64, 64, 0); //The part until fillTV() will only be shown on the Gamepad (because this is meant to be a gamepad-only application, that's also why the font is always the normal one on the TV)
 
 		if (flags->menu) {
-			drawOwnString(60, 120, "Current theme: ", 15, 255, 255, 255, 0);
-			drawOwnString(260, 120, flags->theme, 7, 255, 255, 255, 0);
-			if (flags->change_theme)
-				drawOwnString(60, 200, "NOTE: no use yet.", 17, 255, 255, 255, 0);
+			drawOwnString(60, 120, "Current theme: ", 15, rr, gg, bb, 0);
+			drawOwnString(260, 120, flags->theme, 12, rr, gg, bb, 0);
 
 			if (!flags->change_theme) {
-				drawOwnString(365, 30, "Settings", 8, 255, 255, 255, 0);
+				drawOwnString(365, 30, "Settings", 8, rr, gg, bb, 0);
 
 				if (!flags->QWERTY)
-					drawOwnString(60, 80, "QWERTY", 6, 255, 255, 255, 0);
+					drawOwnString(60, 80, "QWERTY", 6, rr, gg, bb, 0);
 				else
-					drawOwnString(60, 80, "QWERTZ", 6, 255, 255, 255, 0);
+					drawOwnString(60, 80, "QWERTZ", 6, rr, gg, bb, 0);
 
-				drawOwnString(625, 80, "Change theme", 12, 255, 255, 255, 0);
+				drawOwnString(625, 80, "Change theme", 12, rr, gg, bb, 0);
 			} else {
-				drawOwnString(350, 30, "CHANGE THEME", 12, 255, 255, 255, 0);
-				drawOwnString(60, 80, "Classic", 7, 255, 255, 255, 0);
+				drawOwnString(350, 30, "CHANGE THEME", 12, rr, gg, bb, 0);
+				drawOwnString(60, 80, "Zelda", 7, 255, 255, 255, 0);
+				drawOwnString(175, 80, "Link", 4, 0, 255, 0, 0);
+				drawOwnString(275, 80, "Zora", 4, 0, 255, 255, 0);
 			}
 		}
+
+		// drawString(25, 16, flags->touching);
 
 		if(flags->b) {
 			flags->menu = 0;
@@ -386,8 +404,7 @@ void render(struct renderFlags *flags)
 		}
 
 		if (!flags->menu) {
-			drawOwnString(365, 30, "Keyboard", 8, 255, 255, 255, 0);
-
+			drawOwnString(365, 30, "Keyboard", 8, rr, gg, bb, 0);
 			int i, x = 115, y = 200, plusy = 0, minusy = 0;
 
 
@@ -395,35 +412,35 @@ void render(struct renderFlags *flags)
 				drawFillRect(97, 185, 152, 250, 100, 100, 100, 0);
 				drawChar('Q', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('Q', x, y, 2, 255, 255, 255, 0);
+				drawChar('Q', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyWPressed) {
 				drawFillRect(155, 185, 214, 250, 100, 100, 100, 0);
 				drawChar('W', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('W', x, y, 2, 255, 255, 255, 0);
+				drawChar('W', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyEPressed) {
 				drawFillRect(215, 185, 272, 250, 100, 100, 100, 0);
 				drawChar('E', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('E', x, y, 2, 255, 255, 255, 0);
+				drawChar('E', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyRPressed) {
 				drawFillRect(273, 185, 332, 250, 100, 100, 100, 0);
 				drawChar('R', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('R', x, y, 2, 255, 255, 255, 0);
+				drawChar('R', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyTPressed) {
 				drawFillRect(333, 185, 391, 250, 100, 100, 100, 0);
 				drawChar('T', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('T', x, y, 2, 255, 255, 255, 0);
+				drawChar('T', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->QWERTY) {
@@ -431,7 +448,7 @@ void render(struct renderFlags *flags)
 					drawFillRect(392, 185, 452, 250, 100, 100, 100, 0);
 					drawChar('Y', x, y, 2, 255, 255, 0, 0);
 				} else {
-					drawChar('Y', x, y, 2, 255, 255, 255, 0);
+					drawChar('Y', x, y, 2, rr, gg, bb, 0);
 				}
 				x += 60;
 			} else {
@@ -439,7 +456,7 @@ void render(struct renderFlags *flags)
 					drawFillRect(392, 185, 452, 250, 100, 100, 100, 0);
 					drawChar('Z', x, y, 2, 255, 255, 0, 0);
 				} else {
-					drawChar('Z', x, y, 2, 255, 255, 255, 0);
+					drawChar('Z', x, y, 2, rr, gg, bb, 0);
 				}
 				x += 60;
 			}
@@ -447,28 +464,28 @@ void render(struct renderFlags *flags)
 				drawFillRect(453, 185, 512, 250, 100, 100, 100, 0);
 				drawChar('U', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('U', x, y, 2, 255, 255, 255, 0);
+				drawChar('U', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 68;
 			if (flags->keyIPressed) {
 				drawFillRect(513, 185, 572, 250, 100, 100, 100, 0);
 				drawChar('I', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('I', x, y, 2, 255, 255, 255, 0);
+				drawChar('I', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 52;
 			if (flags->keyOPressed) {
 				drawFillRect(573, 185, 631, 250, 100, 100, 100, 0);
 				drawChar('O', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('O', x, y, 2, 255, 255, 255, 0);
+				drawChar('O', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyPPressed) {
 				drawFillRect(632, 185, 690, 250, 100, 100, 100, 0);
 				drawChar('P', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('P', x, y, 2, 255, 255, 255, 0);
+				drawChar('P', x, y, 2, rr, gg, bb, 0);
 			}
 
 
@@ -479,63 +496,63 @@ void render(struct renderFlags *flags)
 				drawFillRect(97, 255, 152, 320, 100, 100, 100, 0);
 				drawChar('A', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('A', x, y, 2, 255, 255, 255, 0);
+				drawChar('A', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keySPressed) {
 				drawFillRect(153, 255, 214, 320, 100, 100, 100, 0);
 				drawChar('S', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('S', x, y, 2, 255, 255, 255, 0);
+				drawChar('S', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyDPressed) {
 				drawFillRect(215, 255, 272, 320, 100, 100, 100, 0);
 				drawChar('D', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('D', x, y, 2, 255, 255, 255, 0);
+				drawChar('D', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyFPressed) {
 				drawFillRect(273, 255, 332, 320, 100, 100, 100, 0);
 				drawChar('F', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('F', x, y, 2, 255, 255, 255, 0);
+				drawChar('F', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyGPressed) {
 				drawFillRect(333, 255, 391, 320, 100, 100, 100, 0);
 				drawChar('G', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('G', x, y, 2, 255, 255, 255, 0);
+				drawChar('G', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 61;
 			if (flags->keyHPressed) {
 				drawFillRect(392, 255, 452, 320, 100, 100, 100, 0);
 				drawChar('H', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('H', x, y, 2, 255, 255, 255, 0);
+				drawChar('H', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 59;
 			if (flags->keyJPressed) {
 				drawFillRect(453, 255, 512, 320, 100, 100, 100, 0);
 				drawChar('J', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('J', x, y, 2, 255, 255, 255, 0);
+				drawChar('J', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 61;
 			if (flags->keyKPressed) {
 				drawFillRect(513, 255, 572, 320, 100, 100, 100, 0);
 				drawChar('K', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('K', x, y, 2, 255, 255, 255, 0);
+				drawChar('K', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyLPressed) {
 				drawFillRect(573, 255, 631, 320, 100, 100, 100, 0);
 				drawChar('L', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('L', x, y, 2, 255, 255, 255, 0);
+				drawChar('L', x, y, 2, rr, gg, bb, 0);
 			}
 
 
@@ -547,7 +564,7 @@ void render(struct renderFlags *flags)
 					drawFillRect(97, 325, 152, 390, 100, 100, 100, 0);
 					drawChar('Z', x, y, 2, 255, 255, 0, 0);
 				} else {
-					drawChar('Z', x, y, 2, 255, 255, 255, 0);
+					drawChar('Z', x, y, 2, rr, gg, bb, 0);
 				}
 				x += 60;
 			} else {
@@ -555,7 +572,7 @@ void render(struct renderFlags *flags)
 					drawFillRect(97, 325, 152, 390, 100, 100, 100, 0);
 					drawChar('Y', x, y, 2, 255, 255, 0, 0);
 				} else {
-					drawChar('Y', x, y, 2, 255, 255, 255, 0);
+					drawChar('Y', x, y, 2, rr, gg, bb, 0);
 				}
 				x += 60;
 			}
@@ -563,42 +580,42 @@ void render(struct renderFlags *flags)
 				drawFillRect(153, 325, 214, 390, 100, 100, 100, 0);
 				drawChar('X', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('X', x, y, 2, 255, 255, 255, 0);
+				drawChar('X', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyCPressed) {
 				drawFillRect(215, 325, 272, 390, 100, 100, 100, 0);
 				drawChar('C', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('C', x, y, 2, 255, 255, 255, 0);
+				drawChar('C', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyVPressed) {
 				drawFillRect(273, 325, 332, 390, 100, 100, 100, 0);
 				drawChar('V', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('V', x, y, 2, 255, 255, 255, 0);
+				drawChar('V', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyBPressed) {
 				drawFillRect(333, 325, 391, 390, 100, 100, 100, 0);
 				drawChar('B', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('B', x, y, 2, 255, 255, 255, 0);
+				drawChar('B', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyNPressed) {
 				drawFillRect(392, 325, 452, 390, 100, 100, 100, 0);
 				drawChar('N', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('N', x, y, 2, 255, 255, 255, 0);
+				drawChar('N', x, y, 2, rr, gg, bb, 0);
 			}
 			x += 60;
 			if (flags->keyMPressed) {
 				drawFillRect(453, 325, 512, 390, 100, 100, 100, 0);
 				drawChar('M', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('M', x, y, 2, 255, 255, 255, 0);
+				drawChar('M', x, y, 2, rr, gg, bb, 0);
 			}
 
 			y += 10;
@@ -607,7 +624,7 @@ void render(struct renderFlags *flags)
 				drawFillRect(513, 325, 572, 390, 100, 100, 100, 0);
 				drawChar(':', x, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar(':', x, y, 2, 255, 255, 255, 0);
+				drawChar(':', x, y, 2, rr, gg, bb, 0);
 			}
 			
 			y -= 7;
@@ -616,27 +633,27 @@ void render(struct renderFlags *flags)
 				drawFillRect(573, 325, 631, 390, 100, 100, 100, 0);
 				drawChar('.', x + 5, y, 2, 255, 255, 0, 0);
 			} else {
-				drawChar('.', x + 5, y, 2, 255, 255, 255, 0);
+				drawChar('.', x + 5, y, 2, rr, gg, bb, 0);
 			}			
 
 
-			drawFillRect(95, 183, 695, 188, 255, 255, 255, 0);
-			drawFillRect(95, 250, 690, 255, 255, 255, 255, 0);
-			drawFillRect(95, 320, 630, 325, 255, 255, 255, 0);
-			drawFillRect(95, 390, 630, 395, 255, 255, 255, 0);
+			drawFillRect(95, 183, 695, 188, rr, gg, bb, 0);
+			drawFillRect(95, 250, 690, 255, rr, gg, bb, 0);
+			drawFillRect(95, 320, 630, 325, rr, gg, bb, 0);
+			drawFillRect(95, 390, 630, 395, rr, gg, bb, 0);
 
-			drawFillRect(92, 183, 97, 395, 255, 255, 255, 0);
-			drawFillRect(152, 185, 157, 395, 255, 255, 255, 0);
-			drawFillRect(214, 185, 219, 395, 255, 255, 255, 0);
-			drawFillRect(272, 185, 277, 395, 255, 255, 255, 0);
-			drawFillRect(332, 185, 337, 395, 255, 255, 255, 0);
-			drawFillRect(391, 185, 396, 395, 255, 255, 255, 0);
-			drawFillRect(452, 185, 457, 395, 255, 255, 255, 0);
-			drawFillRect(512, 185, 517, 395, 255, 255, 255, 0);
-			drawFillRect(572, 185, 577, 395, 255, 255, 255, 0);
-			drawFillRect(631, 185, 636, 395, 255, 255, 255, 0);
+			drawFillRect(92, 183, 97, 395, rr, gg, bb, 0);
+			drawFillRect(152, 185, 157, 395, rr, gg, bb, 0);
+			drawFillRect(214, 185, 219, 395, rr, gg, bb, 0);
+			drawFillRect(272, 185, 277, 395, rr, gg, bb, 0);
+			drawFillRect(332, 185, 337, 395, rr, gg, bb, 0);
+			drawFillRect(391, 185, 396, 395, rr, gg, bb, 0);
+			drawFillRect(452, 185, 457, 395, rr, gg, bb, 0);
+			drawFillRect(512, 185, 517, 395, rr, gg, bb, 0);
+			drawFillRect(572, 185, 577, 395, rr, gg, bb, 0);
+			drawFillRect(631, 185, 636, 395, rr, gg, bb, 0);
 
-			drawFillRect(690, 185, 695, 255, 255, 255, 255, 0);
+			drawFillRect(690, 185, 695, 255, rr, gg, bb, 0);
 
 			x = 710;
 			y = 218;
@@ -645,7 +662,7 @@ void render(struct renderFlags *flags)
 				if (flags->keyBackspacePressed)
 					drawLine(x, y - minusy, x, y + plusy, 255, 255, 0, 0);
 				else
-					drawLine(x, y - minusy, x, y + plusy, 255, 255, 255, 0);
+					drawLine(x, y - minusy, x, y + plusy, rr, gg, bb, 0);
 				++x;
 				++plusy;
 				++minusy;
@@ -653,7 +670,7 @@ void render(struct renderFlags *flags)
 			if (flags->keyBackspacePressed)
 				drawFillRect(x, y + 8, x + 40, y - 8, 255, 255, 0, 0);
 			else
-				drawFillRect(x, y + 8, x + 40, y - 8, 255, 255, 255, 0);
+				drawFillRect(x, y + 8, x + 40, y - 8, rr, gg, bb, 0);
 
 			if (flags->keySpacePressed) {
 				drawFillRect(657, 275, 798, 307, 100, 100, 100, 0);
@@ -661,17 +678,15 @@ void render(struct renderFlags *flags)
 				drawRect(656, 274, 799, 308, 255, 255, 0, 0);
 				drawRect(657, 273, 798, 309, 255, 255, 0, 0);
 			} else {
-				drawRect(655, 275, 800, 307, 255, 255, 255, 0);
-				drawRect(656, 274, 799, 308, 255, 255, 255, 0);
-				drawRect(657, 273, 798, 309, 255, 255, 255, 0);
+				drawRect(655, 275, 800, 307, rr, gg, bb, 0);
+				drawRect(656, 274, 799, 308, rr, gg, bb, 0);
+				drawRect(657, 273, 798, 309, rr, gg, bb, 0);
 			}
 		}
 
 		if (!flags->change_theme && !flags->menu) {
-			drawOwnString(60, 90, "Your text:", 10, 255, 255, 255, 0);
-			drawOwnString(60, 130, flags->text, flags->textLength - 1, 255, 255, 255, 0);
-
-			//drawString(25, 16, flags->touching);
+			drawOwnString(60, 90, "Your text:", 10, rr, gg, bb, 0);
+			drawOwnString(60, 130, flags->text, flags->textLength - 1, rr, gg, bb, 0);
 		}
 
 		if (!flags->menu) {
@@ -681,10 +696,10 @@ void render(struct renderFlags *flags)
 				drawFillRect(820, 440, 824, 460, 255, 255, 0, 0);
 				drawFillRect(812, 452, 832, 448, 255, 255, 0, 0);
 			} else {
-				drawFillCircle(822, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 16, rr, gg, bb, 0);
 				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
-				drawFillRect(820, 440, 824, 460, 255, 255, 255, 0);
-				drawFillRect(812, 452, 832, 448, 255, 255, 255, 0);
+				drawFillRect(820, 440, 824, 460, rr, gg, bb, 0);
+				drawFillRect(812, 452, 832, 448, rr, gg, bb, 0);
 			}
 		} else {
 			if (flags->b) {
@@ -692,36 +707,35 @@ void render(struct renderFlags *flags)
 				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
 				drawChar('B', 818, 441, 1, 255, 255, 0, 0);
 			} else {
-				drawFillCircle(822, 450, 16, 255, 255, 255, 0);
+				drawFillCircle(822, 450, 16, rr, gg, bb, 0);
 				drawFillCircle(822, 450, 13, 64, 64, 64, 0);
-				drawChar('B', 818, 441, 1, 255, 255, 255, 0);
+				drawChar('B', 818, 441, 1, rr, gg, bb, 0);
 			}
 		}
-		drawFillCircle(27, 452, 22, 255, 255, 255, 0);
+		drawFillCircle(27, 452, 22, rr, gg, bb, 0);
 		drawFillCircle(27, 452, 19, 64, 64, 64, 0);
 
 		int m, x = 12, y = 450;
 		for (m = 0; m < 16; ++m) {
-			drawLine(x + m, y, x + 30 - m, y + m, 255, 255, 255, 0);
+			drawLine(x + m, y, x + 30 - m, y + m, rr, gg, bb, 0);
 			--y;
 		}
-		drawFillRect(17, 450, 37, 465, 255, 255, 255, 0);
+		drawFillRect(17, 450, 37, 465, rr, gg, bb, 0);
 		drawFillRect(23, 453, 31, 458, 64, 64, 64, 0);
 
-		// drawDiagLine(int x_start, int y_start, int y_end, int thickness, char left_right, char up_down, char r, char g, char b, char a)
 		if (flags->x) {
 			drawFillCircle(822, 30, 22, 255, 255, 0, 0);
 			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
 			drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 0, 0);
 			drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 0, 0);
 		} else {
-			drawFillCircle(822, 30, 22, 255, 255, 255, 0);
+			drawFillCircle(822, 30, 22, rr, gg, bb, 0);
 			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
-			drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 255, 0);
-			drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 255, 0);
+			drawDiagLine(811, 20, 40, 3, 'r', 'd', rr, gg, bb, 0);
+			drawDiagLine(811, 40, 20, 3, 'r', 'u', rr, gg, bb, 0);
 		}
 
-		drawOwnString(370, 440, "by cmdj13", 9, 255, 255, 255, 0);
+		drawOwnString(370, 440, "by cmdj13", 9, rr, gg, bb, 0);
 
 		fillTV(64, 64, 64, 0);
 
