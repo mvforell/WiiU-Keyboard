@@ -1,8 +1,6 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#include "types.h"
-#include "init.h"
 //Function declarations for my graphics library
 void flipBuffers();
 void fillScreen(char r, char g, char b, char a);

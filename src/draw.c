@@ -1,86 +1,46 @@
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include "dynamic_libs/os_functions.h"
+#include "dynamic_libs/fs_functions.h"
+#include "dynamic_libs/gx2_functions.h"
+#include "dynamic_libs/sys_functions.h"
+#include "dynamic_libs/vpad_functions.h"
+#include "dynamic_libs/padscore_functions.h"
+#include "dynamic_libs/socket_functions.h"
+#include "dynamic_libs/ax_functions.h"
+#include "fs/fs_utils.h"
+#include "fs/sd_fat_devoptab.h"
+#include "system/memory.h"
+#include "utils/logger.h"
+#include "utils/utils.h"
+#include "common/common.h"
 #include "draw.h"
 
 void flipBuffers()
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-
-	void(*DCFlushRange)(void *buffer, uint32_t length);
-	unsigned int(*OSScreenFlipBuffersEx)(unsigned int bufferNum);
-	OSDynLoad_FindExport(coreinit_handle, 0, "DCFlushRange", &DCFlushRange);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenFlipBuffersEx", &OSScreenFlipBuffersEx);
-	unsigned int(*OSScreenGetBufferSizeEx)(unsigned int bufferNum);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenGetBufferSizeEx", &OSScreenGetBufferSizeEx);
-	//Grab the buffer size for each screen (TV and gamepad)
-	int buf0_size = OSScreenGetBufferSizeEx(0);
-	int buf1_size = OSScreenGetBufferSizeEx(1);
-	//Flush the cache
-	DCFlushRange((void *)0xF4000000 + buf0_size, buf1_size);
-	DCFlushRange((void *)0xF4000000, buf0_size);
-	//Flip the buffer
 	OSScreenFlipBuffersEx(0);
 	OSScreenFlipBuffersEx(1);
 }
 
 void drawString(int x, int line, char * string)
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int(*OSScreenPutFontEx)(unsigned int bufferNum, unsigned int posX, unsigned int line, void * buffer);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenPutFontEx", &OSScreenPutFontEx);
 	OSScreenPutFontEx(0, x, line, string);
 	OSScreenPutFontEx(1, x, line, string);
 }
 
 void fillScreen(char r,char g,char b,char a)
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int(*OSScreenClearBufferEx)(unsigned int bufferNum, unsigned int temp);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenClearBufferEx", &OSScreenClearBufferEx);
-	uint32_t num = (r << 24) | (g << 16) | (b << 8) | a;
-	OSScreenClearBufferEx(0, num);
-	OSScreenClearBufferEx(1, num);
+	OSScreenClearBufferEx(0, (r << 24) | (g << 16) | (b << 8) | a);
+	OSScreenClearBufferEx(1, (r << 24) | (g << 16) | (b << 8) | a);
 }
 
 //Rendering in 
 void drawPixel(int x, int y, char r, char g, char b, char a)
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int (*OSScreenPutPixelEx)(unsigned int bufferNum, unsigned int posX, unsigned int posY, uint32_t color);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenPutPixelEx", &OSScreenPutPixelEx);
-	uint32_t num = (r << 24) | (g << 16) | (b << 8) | a;
-	OSScreenPutPixelEx(0,x,y,num);
-	OSScreenPutPixelEx(1,x,y,num);
-	//Code to write to framebuffer directly. For some reason this is only writing to one of the framebuffers when calling flipBuffers. Should provide speedup but needs investigation.
-	/*
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int(*OSScreenGetBufferSizeEx)(unsigned int bufferNum);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenGetBufferSizeEx", &OSScreenGetBufferSizeEx);
-
-	void(*memcpy)(void* dest, void* src, int length);
-	OSDynLoad_FindExport(coreinit_handle, 0, "memcpy", &memcpy);
-	int buf0_size = OSScreenGetBufferSizeEx(0);
-	int height = 1024;
-	int width = 1280;
-	char *screen = (void *)0xF4000000;
-	uint32_t v=(x + y*width)*4;
-	screen[v]=r;
-	screen[v+1]=g;
-	screen[v+2]=b;
-	screen[v+3]=a;
-
-	height = 480;
-	width = 896;
-	char *screen2 = (void *)0xF4000000 + buf0_size;
-	v=(x + y*width)*4;
-	screen2[v]=r;
-	screen2[v+1]=g;
-	screen2[v+2]=b;
-	screen2[v+3]=a;
-	*/
+	OSScreenPutPixelEx(0, x, y, (r << 24) | (g << 16) | (b << 8) | a);
+	OSScreenPutPixelEx(1, x, y, (r << 24) | (g << 16) | (b << 8) | a);
 }
 
 void drawLine(int x1, int y1, int x2, int y2, char r, char g, char b, char a)
