@@ -1,6 +1,6 @@
 # WiiU-Keyboard
 
-This is a WIP keyboard for the Nintendo WiiU.
+This is a keyboard for the Nintendo WiiU.
 
 Binaries can be found in the Release section.
 
