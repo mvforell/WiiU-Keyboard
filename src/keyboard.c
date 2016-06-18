@@ -1,26 +1,27 @@
-#include "program.h"
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include "dynamic_libs/os_functions.h"
+#include "dynamic_libs/fs_functions.h"
+#include "dynamic_libs/gx2_functions.h"
+#include "dynamic_libs/sys_functions.h"
+#include "dynamic_libs/vpad_functions.h"
+#include "dynamic_libs/padscore_functions.h"
+#include "dynamic_libs/socket_functions.h"
+#include "dynamic_libs/ax_functions.h"
+#include "fs/fs_utils.h"
+#include "fs/sd_fat_devoptab.h"
+#include "system/memory.h"
+#include "utils/logger.h"
+#include "utils/utils.h"
+#include "common/common.h"
+#include "keyboard.h"
 
 #define WAIT 0x1
 
-void _entryPoint()
+void launchKeyboard(char (*returnedString)[256])
 {
-	/****************************>           Get Handles           <****************************/
-	//Get a handle to coreinit.rpl
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	//Get a handle to vpad.rpl */
-	unsigned int vpad_handle;
-	OSDynLoad_Acquire("vpad.rpl", &vpad_handle);
-	/****************************>       External Prototypes       <****************************/
-	//VPAD functions
-	int(*VPADRead)(int controller, VPADData *buffer, unsigned int num, int *error);
-	//OS functions
-	void(*_Exit)();
-	/****************************>             Exports             <****************************/
-	//VPAD functions
-	OSDynLoad_FindExport(vpad_handle, 0, "VPADRead", &VPADRead);
-	//OS functions
-	OSDynLoad_FindExport(coreinit_handle, 0, "_Exit", &_Exit);
 	/****************************>             Globals             <****************************/
 	struct renderFlags flags;
 	flags.touch=0;
@@ -339,36 +340,28 @@ void _entryPoint()
 			}
 		}
 
-		if ((vpad_data.btn_hold & BUTTON_X) || flags.xTouched) {
+		if ((vpad_data.btns_h & VPAD_BUTTON_X) || flags.xTouched) {
 			for (n = 0; n < flags.textLength; ++n)
 				flags.text[n] = ' ';
 			flags.textLength = 1;
-		} else if ((vpad_data.btn_hold & BUTTON_B) || flags.bTouched)
+		} else if ((vpad_data.btns_h & VPAD_BUTTON_B) || flags.bTouched)
 			flags.b=1;
-		else if ((vpad_data.btn_hold & BUTTON_PLUS) || flags.plusTouched)
+		else if ((vpad_data.btns_h & VPAD_BUTTON_PLUS) || flags.plusTouched)
 			flags.plus=1;
-		else if((vpad_data.btn_hold & BUTTON_HOME) || flags.HomeTouched)
+		else if((vpad_data.btns_h & VPAD_BUTTON_HOME) || flags.HomeTouched)
 			break;
 
 		render(&flags);
 	}
-	
-	
-	//WARNING: DO NOT CHANGE THIS. YOU MUST CLEAR THE FRAMEBUFFERS AND IMMEDIATELY CALL EXIT FROM THIS FUNCTION. RETURNING TO LOADER CAUSES FREEZE.
-	int ii=0;
-	for(ii;ii<2;ii++)
-	{
-		fillScreen(0,0,0,0);
-		flipBuffers();
+	for(int i = 0; i < 256; i++) {
+		(*returnedString)[i] = flags.text[i];
 	}
-	_Exit();
 }
 
 void render(struct renderFlags *flags)
 {
-	int i=0;
 	char rr = flags->rc, gg = flags->gc, bb = flags->bc;
-	for(i;i<2;i++)
+	for(int i = 0; i < 2; i++)
 	{
 		fillScreen(64, 64, 64, 0); //The part until fillTV() will only be shown on the Gamepad (because this is meant to be a gamepad-only application, that's also why the font is always the normal one on the TV)
 
@@ -1110,20 +1103,11 @@ void drawChar(char character, int xpos, int ypos, int scale, char r, char g, cha
 
 void fillTV(char r, char g, char b, char a)
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int(*OSScreenClearBufferEx)(unsigned int bufferNum, unsigned int temp);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenClearBufferEx", &OSScreenClearBufferEx);
-	uint32_t num = (r << 24) | (g << 16) | (b << 8) | a;
-	OSScreenClearBufferEx(0, num);
+	OSScreenClearBufferEx(0, (r << 24) | (g << 16) | (b << 8) | a);
 }
 
 void drawStringTV(int x, int line, char * string)
 {
-	unsigned int coreinit_handle;
-	OSDynLoad_Acquire("coreinit.rpl", &coreinit_handle);
-	unsigned int(*OSScreenPutFontEx)(unsigned int bufferNum, unsigned int posX, unsigned int line, void * buffer);
-	OSDynLoad_FindExport(coreinit_handle, 0, "OSScreenPutFontEx", &OSScreenPutFontEx);
 	OSScreenPutFontEx(0, x, line, string);
 }
 

@@ -1,35 +1,40 @@
+OUTPUT(ftpiiu.elf);
 
-OUTPUT_FORMAT("elf32-powerpc")
-OUTPUT_ARCH(powerpc:common)
-
-ENTRY(_start)
+/* Tell linker where our application entry is so the garbage collect can work correct */
+ENTRY(__entry_menu);
 
 SECTIONS {
-	. = 0x01808000;
-
-	__rx_start = .;
-
-	.start : { crt0.o(*) }
-	.text : { *(.text) }
-	.rodata : { *(.rodata .rodata.*)}
-
-	__rx_end = .;
-
-	. = 0xF4C00000;
-
-	__rw_start = .;
-
-	.data : { *(.data) }
-
-	__bss_start = .;
-	.bss : { *(.bss) }
-	__bss_end = .;
-
-	. = ALIGN(0x40);
-	.stack : {
-		. += 0x8000;
-		_stack_top = .;
+	. = 0x00802000;
+	.text : {
+		*(.text*);
 	}
+	.rodata : {
+		*(.rodata*);
+	}
+	.data : {
+		*(.data*);
 
-	__rw_end = .;
+		__sdata_start = .;
+		*(.sdata*);
+		__sdata_end = .;
+
+		__sdata2_start = .;
+		*(.sdata2*);
+		__sdata2_end = .;
+	}
+	.bss : {
+		__bss_start = .;
+		*(.bss*);
+		*(.sbss*);
+		*(COMMON);
+		__bss_end = .;
+	}
+	__CODE_END = .;
+
+	/DISCARD/ : {
+		*(*);
+	}
 }
+
+/******************************************************** FS ********************************************************/
+/* coreinit.rpl difference in addresses 0xFE3C00 */

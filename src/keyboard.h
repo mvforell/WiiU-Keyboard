@@ -1,8 +1,6 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include "vpad.h"
-#include "types.h"
 #include "draw.h"
 
 struct renderFlags {
@@ -56,7 +54,7 @@ struct renderFlags {
 	char bc;
 };
 
-void _entryPoint();
+void launchKeyboard();
 void render(struct renderFlags *flags);
 void drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a);
 void fillTV(char r, char g, char b, char a);
