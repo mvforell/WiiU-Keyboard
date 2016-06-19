@@ -68,7 +68,7 @@ void launchKeyboard(char (*returnedString)[256])
 	flags.rc=255;
 	flags.gc=255;
 	flags.bc=255;
-	
+
 	VPADData vpad_data;
 
 	__os_snprintf(flags.theme, 32, "Zelda       ");
@@ -84,7 +84,7 @@ void launchKeyboard(char (*returnedString)[256])
 	while (1)
 	{
 		VPADRead(0, &vpad_data, 1, &error);
-		
+
 		if (vpad_data.tpdata.touched == 1) {
 			flags.touch=1;
 			__os_snprintf(flags.touching, 32, "%i, %i", vpad_data.tpdata.x, vpad_data.tpdata.y);
@@ -386,8 +386,6 @@ void render(struct renderFlags *flags)
 			}
 		}
 
-		// drawString(25, 16, flags->touching);
-
 		if(flags->b) {
 			flags->menu = 0;
 			flags->change_theme = 0;
@@ -482,7 +480,7 @@ void render(struct renderFlags *flags)
 			}
 
 
-			
+
 			y += 70;
 			x = 115;
 			if (flags->keyAPressed) {
@@ -619,7 +617,7 @@ void render(struct renderFlags *flags)
 			} else {
 				drawChar(':', x, y, 2, rr, gg, bb, 0);
 			}
-			
+
 			y -= 7;
 			x += 54;
 			if (flags->keyPeriodPressed) {
@@ -627,7 +625,7 @@ void render(struct renderFlags *flags)
 				drawChar('.', x + 5, y, 2, 255, 255, 0, 0);
 			} else {
 				drawChar('.', x + 5, y, 2, rr, gg, bb, 0);
-			}			
+			}
 
 
 			drawFillRect(95, 183, 695, 188, rr, gg, bb, 0);
@@ -715,17 +713,18 @@ void render(struct renderFlags *flags)
 		}
 		drawFillRect(17, 450, 37, 465, rr, gg, bb, 0);
 		drawFillRect(23, 453, 31, 458, 64, 64, 64, 0);
-
-		if (flags->x) {
-			drawFillCircle(822, 30, 22, 255, 255, 0, 0);
-			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
-			drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 0, 0);
-			drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 0, 0);
-		} else {
-			drawFillCircle(822, 30, 22, rr, gg, bb, 0);
-			drawFillCircle(822, 30, 19, 64, 64, 64, 0);
-			drawDiagLine(811, 20, 40, 3, 'r', 'd', rr, gg, bb, 0);
-			drawDiagLine(811, 40, 20, 3, 'r', 'u', rr, gg, bb, 0);
+		if (!flags->menu) {
+			if (flags->x) {
+				drawFillCircle(822, 30, 22, 255, 255, 0, 0);
+				drawFillCircle(822, 30, 19, 64, 64, 64, 0);
+				drawDiagLine(811, 20, 40, 3, 'r', 'd', 255, 255, 0, 0);
+				drawDiagLine(811, 40, 20, 3, 'r', 'u', 255, 255, 0, 0);
+			} else {
+				drawFillCircle(822, 30, 22, rr, gg, bb, 0);
+				drawFillCircle(822, 30, 19, 64, 64, 64, 0);
+				drawDiagLine(811, 20, 40, 3, 'r', 'd', rr, gg, bb, 0);
+				drawDiagLine(811, 40, 20, 3, 'r', 'u', rr, gg, bb, 0);
+			}
 		}
 
 		drawOwnString(370, 440, "by cmdj13", 9, rr, gg, bb, 0);
@@ -1115,7 +1114,6 @@ void drawOwnString(int xpos, int ypos, char * string, int length, char r, char g
 {
 	int i, x = xpos, y = ypos, plusx = 0;
 	char h;
-	//drawChar(char character, int xpos, int ypos, int scale, char r, char g, char b, char a)
 	for (i = 0; i < length; ++i) {
 		h = *(string + i);
 		if (!(h >= 65 && h <= 90) && (h >= 97 && h <= 122)) {

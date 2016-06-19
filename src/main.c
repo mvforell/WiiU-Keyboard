@@ -23,7 +23,7 @@ void Menu_Main()
 	InitOSFunctionPointers();
 	InitVPadFunctionPointers();
 	memoryInitialize();
-	
+
 	OSScreenInit();
 	//Grab the buffer size for each screen (TV and gamepad)
 	int buf0_size = OSScreenGetBufferSizeEx(0);
@@ -38,14 +38,15 @@ void Menu_Main()
 	}
 	OSScreenEnableEx(0, 1);
 	OSScreenEnableEx(1, 1);
-	
+
 	char returnedString[256];
 	launchKeyboard(&returnedString);
 	fillScreen(0, 0, 0, 255);
-	drawString(0, 0, returnedString);
+	drawString(0, 0, "You wrote:");
+	drawString(0, 1, returnedString);
 	flipBuffers();
-	sleep(10);
-	
+	sleep(3);
+
 	for(int i = 0; i < 2; i++) {
 		fillScreen(0,0,0,0);
 		flipBuffers();
